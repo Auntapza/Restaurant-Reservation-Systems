@@ -90,7 +90,7 @@ function Menubar({state, set} : {
     return (
         <>
             <div className={(state ? 'flex' : 'hidden') + " z-[99] fixed w-full h-full" }>
-                <div className="bg-black opacity-20 w-full h-full"></div>
+                <div onClick={() => {set(false)}} className="bg-black opacity-20 w-full h-full"></div>
                 <div className="bg-white w-1/3 flex flex-col justify-between">
                     <div>
                         {/* first section */}
@@ -107,7 +107,7 @@ function Menubar({state, set} : {
                         {/* second section */}
                         <div className="grid px-6 py-8 gap-5">
                             {/* home button */}
-                            <MenuLink href="" text="Home">
+                            <MenuLink href="/app" text="Home">
                                 <svg className=" h-14 w-auto" width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path className="group-hover:stroke-orange-500 transition duration-200" d="M8.125 20.7344C8.125 18.528 8.125 17.4249 8.571 16.4552C9.017 15.4855 9.85459 14.7675 11.5298 13.3316L13.1548 11.9388C16.1827 9.34344 17.6966 8.04578 19.5 8.04578C21.3034 8.04578 22.8173 9.34344 25.8452 11.9388L27.4702 13.3316C29.1454 14.7675 29.983 15.4855 30.429 16.4552C30.875 17.4249 30.875 18.528 30.875 20.7344V27.625C30.875 30.6892 30.875 32.2212 29.9231 33.1731C28.9712 34.125 27.4391 34.125 24.375 34.125H14.625C11.5609 34.125 10.0288 34.125 9.0769 33.1731C8.125 32.2212 8.125 30.6892 8.125 27.625V20.7344Z" stroke="#000" strokeWidth="2"/>
                                     <path className="group-hover:stroke-orange-500 transition duration-200" d="M23.5625 34.125V25.375C23.5625 24.8227 23.1148 24.375 22.5625 24.375H16.4375C15.8852 24.375 15.4375 24.8227 15.4375 25.375V34.125" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -128,7 +128,7 @@ function Menubar({state, set} : {
                                 </svg>
                             </MenuLink>
                             {/* cart */}
-                            <MenuLink href="" text="cart">
+                            <MenuLink href="/app/cart" text="cart">
                             <svg width="55" height="55" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path className="group-hover:stroke-orange-500 transition duration-200" d="M29.1665 5.83325H26.3531C25.6031 5.83325 25.2281 5.83325 24.9569 6.04505C24.6856 6.25684 24.5947 6.62062 24.4128 7.34818L24.0406 8.837C23.7258 10.0961 23.5684 10.7257 23.1357 11.1292C23.0502 11.209 22.9578 11.2811 22.8597 11.3447C22.3633 11.6666 21.7144 11.6666 20.4165 11.6666V11.6666" stroke="#222222" strokeWidth="2" strokeLinecap="round"/>
                                 <path className="group-hover:stroke-orange-500 transition duration-200" d="M8.75 24.7916H23.9883C24.776 24.7916 25.1699 24.7916 25.4242 24.619C25.6192 24.4867 25.7612 24.2896 25.8251 24.0628C25.9084 23.7669 25.7839 23.3933 25.5348 22.646V22.646C25.2592 21.8193 25.1214 21.4059 24.8599 21.1049C24.6571 20.8714 24.4028 20.6881 24.1171 20.5695C23.7489 20.4166 23.3132 20.4166 22.4417 20.4166H14.5833" stroke="#222222" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -139,7 +139,7 @@ function Menubar({state, set} : {
 
                             </MenuLink>
                             {/* Tracking order */}
-                            <MenuLink href="" text="Tracking order">
+                            <MenuLink href="" text="Find Table">
                                 <svg className=" h-14 w-auto" width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path className="group-hover:stroke-orange-500 transition duration-200" d="M8.125 20.7344C8.125 18.528 8.125 17.4249 8.571 16.4552C9.017 15.4855 9.85459 14.7675 11.5298 13.3316L13.1548 11.9388C16.1827 9.34344 17.6966 8.04578 19.5 8.04578C21.3034 8.04578 22.8173 9.34344 25.8452 11.9388L27.4702 13.3316C29.1454 14.7675 29.983 15.4855 30.429 16.4552C30.875 17.4249 30.875 18.528 30.875 20.7344V27.625C30.875 30.6892 30.875 32.2212 29.9231 33.1731C28.9712 34.125 27.4391 34.125 24.375 34.125H14.625C11.5609 34.125 10.0288 34.125 9.0769 33.1731C8.125 32.2212 8.125 30.6892 8.125 27.625V20.7344Z" stroke="#000" strokeWidth="2"/>
                                     <path className="group-hover:stroke-orange-500 transition duration-200" d="M23.5625 34.125V25.375C23.5625 24.8227 23.1148 24.375 22.5625 24.375H16.4375C15.8852 24.375 15.4375 24.8227 15.4375 25.375V34.125" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
