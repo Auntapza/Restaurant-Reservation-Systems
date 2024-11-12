@@ -1,101 +1,122 @@
+'use client'
+
+import Logo from "@/component/Logo";
 import Image from "next/image";
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+// import all use image
+import background from "../img/homepage/homepageBackground.svg"
+import pizza from "../img/homepage/pizza.png"
+import pizzaWater from "../img/homepage/water.png"
+import leaf from "../img/homepage/leaf.png"
+import dummypopfood from "../img/homepage/dummyPopfood.png"
+import star from "../img/homepage/star.png"
+import Footer from "@/component/Footer";
+import { useRouter } from "next/navigation";
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+export default function Home() {
+
+  const router = useRouter();
+
+  // Food card components
+  const FoodCard = ({ rate } : {
+    rate?: number,
+    foodname?: string
+  }) => {
+
+    rate = 5
+
+    return (
+      <div className="grid align-center group">
+
+        <div className="shadow rounded-lg overflow-hidden relative">
+          <div className="size-full bg-gradient-to-t from-black
+          to-transparent absolute flex flex-col justify-between items-center py-5 translate-y-full 
+          group-hover:translate-y-0 transition-all duration-500">
+            <div className="flex self-top relative after:bg-yellow-400 after:w-full after:h-2 after:absolute after:-bottom-4">
+              {Array.from({length: rate}).map((e, index) => <Image alt="" key={index} src={star}/>)}
+            </div>
+            <p className="text-6xl text-white mb-5">Pizza</p>
+          </div>
+          <Image alt="" src={dummypopfood}/>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+        <button className="bg-orange-500 text-white rounded-md shadow py-3 text-2xl mt-8 mx-8
+        hover:scale-110 transition">Order Now</button>
+
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <Image alt="" src={background} className="absolute lg:right-[-4rem] lg:top-[-5rem] 2xl:h-[120vh] 
+      lg:h-[90vh] w-auto object-cover z-0 md:h-[70vh] md:top-[-3rem] md:right-[-4rem]
+      translate-x-14"/>
+
+      {/* first dialog */}
+      <div className="flex justify-center">
+        <div className="container z-20">
+
+          <div className="flex justify-between">
+            {/* Left side of page */}
+
+            <div className="ms-14">
+              {/* Logo image */}
+              <Logo className='relative mt-[7rem] md:w-[220px]'/>
+
+              {/* Text on first page */}
+              <p className="2xl:text-8xl mt-12 lg:text-6xl md:text-4xl">Make food <br />is <br />More food</p>
+
+              {/* Book now button */}
+              <button onClick={() => {router.push('/app')}} className="bg-orange-500 text-white lg:py-5 md:py-3
+              relative lg:px-20 md:px-14 lg:text-4xl font-normal
+               lg:rounded-xl md:rounded-md shadow-lg md:text-xl mt-[7rem]
+               hover:scale-110 transition-all duration-500">
+                Start using
+                <Image alt="" src={leaf} className="absolute lg:-top-24 lg:-left-24 md:-top-8 md:-left-8"/>
+                <Image alt="" src={leaf} className="absolute lg:size-20 md:size-14 rotate-[-51deg] top-0 right-0"/>
+              </button>
+            </div>
+
+            {/* right side of first page */}
+
+            <div>
+                {/* pizza image */}
+                <div className="relative">
+                  <Image alt="" src={pizza} className="mt-[7rem] lg:size-[500px] 2xl:size-[705px] animate-homepage-spin-slow 
+                  object-cover z-50 md:size-[400px]"/>
+                  <Image alt="" src={pizzaWater} className="absolute top-[-4rem] left-[-14rem] -z-10 rotate-[62deg]"/>
+                  <Image alt="" src={pizzaWater} className="absolute right-[-6rem] bottom-[-9rem] -z-10 rotate-[-68deg]"/>
+                </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+        {/* Second dialog */}
+
+        <div className="flex justify-center">
+          <div className="container">
+            <div className="my-[20rem]">
+
+              {/* Most pop Text style */}
+              <div className="w-full text-center text-4xl
+              before:w-full before:h-1 before:bg-black relative before:absolute before:left-0 before:-z-50 before:top-1/2">
+                <span className="bg-white">🍴Most Popular🍴</span>
+              </div>
+
+              {/* Food card */}
+
+              <div className="flex justify-between mt-20">
+                {Array.from({length: 3}).map((e, index) => <FoodCard key={index}/>)}
+              </div>
+
+              </div>
+            </div>
+        </div>
+
+        <Footer/>
+    </>
   );
 }
