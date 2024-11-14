@@ -8,12 +8,11 @@ import glasses from '@/img/mainpage/Search.svg'
 import dummyFoodCard from "@/img/mainpage/dummyText.png"
 import star from "@/img/homepage/star.png"
 import Foodpopup from './FoodPopup'
+import Footer from '@/component/Footer'
 
 function Mainpage() {
 
     const [menuDetails, setMenuDetails] = useState(false);
-    console.log(menuDetails);
-    
 
     // For category looping
     const CategoryData = [
@@ -91,6 +90,8 @@ function Mainpage() {
                     })}
                 </div>
             </div>
+
+            <Footer/>
 
         </>
 

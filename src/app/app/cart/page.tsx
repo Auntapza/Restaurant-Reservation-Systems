@@ -1,9 +1,13 @@
+'use client'
+
 import Image from "next/image";
 
 import dummyFoodImage from "@/img/homepage/dummyPopfood.png"
-import Button from "@/component/Button";
+import { useRouter } from "next/navigation";
 
 export default function Cart() {
+
+    const router = useRouter();
 
     // Cart Data
     const CartData = [
@@ -68,7 +72,7 @@ export default function Cart() {
                             <p className="text-gray-500 text-4xl font-bold mt-5 w-fit">150฿</p>
                         </div>
                         <button className="bg-orange-500 p-4 py-2 rounded text-white text-2xl
-                        w-full shadow mt-6 mx-auto justify-self-end">Find Table</button>
+                        w-full shadow mt-6 mx-auto justify-self-end" onClick={() => {router.push('/app/table')}}>Find Table</button>
                     </div>
                 </div>
             </div>

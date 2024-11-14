@@ -7,6 +7,7 @@ import { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react'
 import logo from '../img/Logo.png' // logo image
 import bell from '../img/navbar/Bell.svg' // notification icon
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 function Navbar() {
 
@@ -69,10 +70,43 @@ function Navbar() {
     )
 }
 
+//////////////////////////////// menu bar ////////////////////////////////////////
+
 function Menubar({state, set} : {
     state : boolean,
     set: Dispatch<SetStateAction<boolean>>
 }) {
+
+    
+    
+    const router = useRouter();
+    
+    const [visible, setIsVisible] = useState(false)
+    const [open, setOpen] = useState(false);
+    console.log(visible);
+    console.log(state);
+
+    useEffect(() => {
+
+        let Timeout;
+        if (state) {
+            setIsVisible(true);
+            setOpen(false);
+            Timeout = setTimeout(() => {
+                setOpen(true);
+            }, 10)
+        } else {
+            Timeout = setTimeout(() => {
+                setIsVisible(false);
+            }, 150)
+            setOpen(false);
+        }
+
+        return () => {
+            clearTimeout(Timeout);
+        }
+
+    }, [state])
 
     const MenuLink = ({ children, href, text } : {
         children : ReactNode,
@@ -89,14 +123,16 @@ function Menubar({state, set} : {
 
     return (
         <>
-            <div className={(state ? 'flex' : 'hidden') + " z-[99] fixed w-full h-full" }>
-                <div onClick={() => {set(false)}} className="bg-black opacity-20 w-full h-full"></div>
-                <div className="bg-white w-1/3 flex flex-col justify-between">
+            <div className={(visible ? 'flex' : 'hidden') + " z-[99] fixed w-full h-full"}>
+                <div onClick={() => set(false)} 
+                className={(open ? 'translate-x-0' : '-translate-x-[2000px]') + " bg-black opacity-20 w-full h-full transition"}></div>
+                <div className={(open ? 'translate-x-0' : 'translate-x-[500px]') + 
+                    " bg-white w-1/3 flex flex-col justify-between transition"}>
                     <div>
                         {/* first section */}
                         <div className="border-b border-black flex items-center justify-between p-8">
                             {/* Close button */}
-                            <svg onClick={() => {set(false)}} className="cursor-pointer h-8 w-auto" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg onClick={() => set(false)} className="cursor-pointer h-8 w-auto" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M18 6L6 18" stroke="#33363F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                 <path d="M6 6L18 18" stroke="#33363F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
@@ -139,7 +175,7 @@ function Menubar({state, set} : {
 
                             </MenuLink>
                             {/* Tracking order */}
-                            <MenuLink href="" text="Find Table">
+                            <MenuLink href="/app/table" text="Find Table">
                                 <svg className=" h-14 w-auto" width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path className="group-hover:stroke-orange-500 transition duration-200" d="M8.125 20.7344C8.125 18.528 8.125 17.4249 8.571 16.4552C9.017 15.4855 9.85459 14.7675 11.5298 13.3316L13.1548 11.9388C16.1827 9.34344 17.6966 8.04578 19.5 8.04578C21.3034 8.04578 22.8173 9.34344 25.8452 11.9388L27.4702 13.3316C29.1454 14.7675 29.983 15.4855 30.429 16.4552C30.875 17.4249 30.875 18.528 30.875 20.7344V27.625C30.875 30.6892 30.875 32.2212 29.9231 33.1731C28.9712 34.125 27.4391 34.125 24.375 34.125H14.625C11.5609 34.125 10.0288 34.125 9.0769 33.1731C8.125 32.2212 8.125 30.6892 8.125 27.625V20.7344Z" stroke="#000" strokeWidth="2"/>
                                     <path className="group-hover:stroke-orange-500 transition duration-200" d="M23.5625 34.125V25.375C23.5625 24.8227 23.1148 24.375 22.5625 24.375H16.4375C15.8852 24.375 15.4375 24.8227 15.4375 25.375V34.125" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -149,7 +185,7 @@ function Menubar({state, set} : {
                     </div>
 
                     {/* Logout Section */}
-                    <Link href={'./'} className="border-t border-black p-8">
+                    <button onClick={() => {router.replace('/')}} className="border-t border-black p-8">
                         <div className="flex items-center cursor-pointer transition group gap-4 hover:-translate-x-1 hover:scale-105 hover:shadow">
                             <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M2.8335 17L2.44306 16.6876L2.19318 17L2.44306 17.3123L2.8335 17ZM15.5835 17.5C15.8596 17.5 16.0835 17.2761 16.0835 17C16.0835 16.7238 15.8596 16.5 15.5835 16.5V17.5ZM8.10973 9.60428L2.44306 16.6876L3.22393 17.3123L8.8906 10.229L8.10973 9.60428ZM2.44306 17.3123L8.10973 24.3956L8.8906 23.7709L3.22393 16.6876L2.44306 17.3123ZM2.8335 17.5H15.5835V16.5H2.8335V17.5Z" fill="#FF0A0A"/>
@@ -157,7 +193,7 @@ function Menubar({state, set} : {
                             </svg>
                             <span className="font-bold text-[#f00] text-2xl transition duration-200">Logout</span>
                         </div>
-                    </Link>
+                    </button>
                 </div>
             </div>
         </>
