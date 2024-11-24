@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.active {
+    @apply text-orange-500 ;
+    path {
+        @apply stroke-orange-500;
+    }
+    circle {
+        @apply fill-orange-500
+    }
+}

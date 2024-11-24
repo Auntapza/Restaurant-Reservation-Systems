@@ -1,5 +1,3 @@
-'use client'
-
 import Navbar from "@/component/Navbar";
 
 import { Layoutinterface } from "@/interface/interface"

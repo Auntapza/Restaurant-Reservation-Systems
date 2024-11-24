@@ -1,27 +1,14 @@
+'use client'
+
 import dummyFoodImage from "@/img/homepage/dummyPopfood.png"
 import Image from 'next/image';
+import { useRouter } from "next/navigation";
 
 export default function Summery() {
 
+    const rotuer = useRouter();
+
     const CartData = [
-        {
-            image: dummyFoodImage,
-            name: "Pizza",
-            price: 150,
-            count: 1
-        },
-        {
-            image: dummyFoodImage,
-            name: "Pizza",
-            price: 150,
-            count: 1
-        },
-        {
-            image: dummyFoodImage,
-            name: "Pizza",
-            price: 150,
-            count: 1
-        },
         {
             image: dummyFoodImage,
             name: "Pizza",
@@ -41,7 +28,7 @@ export default function Summery() {
     return (
         <>
             <div className="flex justify-center">
-                <div className="container grid justify-between gap-4">
+                <div className="container flex justify-between gap-4">
 
                     {/* Cart */}
                     <div>
@@ -94,24 +81,17 @@ export default function Summery() {
                 <div />
                 <div />
             </div>
-            <div className="sticky bottom-0 w-full flex justify-center bg-white
-            border shadow-[0_-4px_4px_0_#00000055] py-7 rounded-t-xl">
+            <div className="fixed bottom-0 w-full flex justify-center bg-white
+            border-t shadow-[0_-4px_4px_0_#00000055] py-7 rounded-t-xl mt-6">
                 <div className="container flex justify-between items-center">
                     <p className="text-6xl">
                         Table : <b>{TableSelect}</b>
                     </p>
                     <p className="font-bold text-2xl">Date : {`${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear()}`}</p>
-                    <select name="" id="" className="border border-black p-3 py-2 rounded-lg text-3xl">
-                        <option value="" className="checked:text-orange-500 hover:text-orange-500">9:00 AM - 10:00 AM</option>
-                        <option value="" className="checked:text-orange-500 hover:text-orange-500">9:00 AM - 10:00 AM</option>
-                        <option value="" className="checked:text-orange-500 hover:text-orange-500">9:00 AM - 10:00 AM</option>
-                        <option value="" className="checked:text-orange-500 hover:text-orange-500">9:00 AM - 10:00 AM</option>
-                        <option value="" className="checked:text-orange-500 hover:text-orange-500">9:00 AM - 10:00 AM</option>
-                        <option value="" className="checked:text-orange-500 hover:text-orange-500">9:00 AM - 10:00 AM</option>
-                    </select>
+                    <p className="font-bold text-2xl">Time: 9:00AM - 10:00AM</p>
                     <button className="bg-orange-500 rounded-lg text-white py-4 px-8 2xl:text-3xl xl:text-2xl disabled:bg-orange-300
                     transition disabled:cursor-default"
-                    >Purchase Order</button>
+                    onClick={() => {rotuer.push('payment')}}>Purchase Order</button>
                 </div>
             </div>
         </>

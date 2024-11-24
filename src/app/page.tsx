@@ -39,10 +39,6 @@ export default function Home() {
           </div>
           <Image alt="" src={dummypopfood}/>
         </div>
-
-        <button className="bg-orange-500 text-white rounded-md shadow py-3 text-2xl mt-8 mx-8
-        hover:scale-110 transition">Order Now</button>
-
       </div>
     )
   }

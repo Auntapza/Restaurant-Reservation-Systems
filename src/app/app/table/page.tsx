@@ -23,10 +23,10 @@ export default function FindTable() {
         <>
             <div className="flex justify-center mt-4">
                 <div className="container">
-                    <Link href={''} className="flex gap-3 text-4xl items-center w-fit">
+                    <button onClick={() => {router.back()}} className="flex gap-3 text-4xl items-center w-fit">
                         <Arrow className="size-16" />
                         Back
-                    </Link>
+                    </button>
                     <div className="border border-black p-5 grid grid-rows-2 grid-cols-3
                     justify-items-center mt-5">
 
@@ -45,7 +45,7 @@ export default function FindTable() {
             </div>
 
             {/* Detail section */}
-            <div className="fixed bottom-0 w-full flex justify-center
+            <div className="bg-white mt-6 sticky bottom-0 w-full flex justify-center
             border shadow-[0_-4px_4px_0_#00000055] py-7 rounded-t-xl">
                 <div className="container flex justify-between items-center">
                     <p className="text-6xl">
@@ -75,7 +75,6 @@ enum State {
 }
 
 import correct from '@/img/correct.png'
-import { table } from "console";
 
 function Table( {onClick, state, selected} : {
     onClick?: MouseEventHandler,
@@ -101,7 +100,7 @@ function Table( {onClick, state, selected} : {
     )
 }
 
-function Arrow({ className }: {
+export function Arrow({ className }: {
     className: string
 }) {
     return (

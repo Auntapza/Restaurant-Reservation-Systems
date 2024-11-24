@@ -82,7 +82,7 @@ function Mainpage() {
             </div>
 
             <div className='flex justify-center'>
-                <div className="container grid grid-cols-4 justify-items-center gap-y-9">
+                <div className="container grid 2xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 justify-items-center gap-y-9">
                     {Array.from({length: 12}).map((m, index) => {
                         return (
                             <FoodCard key={index}/>
