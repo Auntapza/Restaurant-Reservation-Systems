@@ -1,7 +1,6 @@
 'use client'
 
 import Image from "next/image";
-import Link from "next/link";
 import { MouseEventHandler, useState } from "react";
 import { useRouter } from "next/navigation"
 
@@ -11,14 +10,6 @@ export default function FindTable() {
 
     const [tableTarget, setTabletarget] = useState<String>('');
 
-    const selectTable = (tableno: string) => {
-        if (tableTarget == tableno) {
-            setTabletarget('');
-        } else {
-            setTabletarget(tableno);
-        }
-    }
-
     return (
         <>
             <div className="flex justify-center mt-4">
@@ -27,19 +18,8 @@ export default function FindTable() {
                         <Arrow className="size-16" />
                         Back
                     </button>
-                    <div className="border border-black p-5 grid grid-rows-2 grid-cols-3
-                    justify-items-center mt-5">
-
-                        {/* Table Layout */}
-                        <Table selected={tableTarget == 'A01'} onClick={() => {selectTable('A01')}}
-                        state={2}/>
-                        <Table selected={tableTarget == 'A02'} onClick={() => {selectTable('A02')}}/>
-                        <Table selected={tableTarget == 'A03'} onClick={() => {selectTable('A03')}}
-                        state={1}/>
-                        <Table selected={tableTarget == 'A04'} onClick={() => {selectTable('A04')}}/>
-                        <Table selected={tableTarget == 'A05'} onClick={() => {selectTable('A05')}}/>
-                        <Table selected={tableTarget == 'A06'} onClick={() => {selectTable('A06')}}/>
-
+                    <div className="border rounded border-black">
+                        <TableSelect tableVal={setTabletarget}/>
                     </div>
                 </div>
             </div>
@@ -75,6 +55,7 @@ enum State {
 }
 
 import correct from '@/img/correct.png'
+import TableSelect from "@/component/TableSelect";
 
 function Table( {onClick, state, selected} : {
     onClick?: MouseEventHandler,
