@@ -1,13 +1,15 @@
 'use client'
 
 import Image from "next/image";
-import { ChangeEvent, DragEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, DragEvent, HtmlHTMLAttributes, useEffect, useRef, useState } from "react";
 import { FileIcon, Trash, Upload as UploadIcon } from '@/img/svg/svg'
 
-/// file Input component
-const FileInput = ({image} : {
+interface inputInterface extends HtmlHTMLAttributes<HTMLInputElement> {
     image?: string
-}) => {
+}
+
+/// file Input component
+const FileInput = ({image, ...rest} :inputInterface) => {
     
     const [preview, setPreview] = useState<string>()
     const [fileName, setFileName] = useState<string>();
@@ -17,9 +19,7 @@ const FileInput = ({image} : {
         if (e.target.files) {
             const imgLink = URL.createObjectURL(e.target.files[0])
             setPreview(imgLink);
-            setFileName(e.target.files[0].name);
-            console.log('test');
-            
+            setFileName(e.target.files[0].name);            
         }
         
     }
@@ -47,7 +47,7 @@ const FileInput = ({image} : {
         if (image) {
             setPreview(image);
         }
-    })
+    }, [])
     
     return (
         <div>
@@ -68,7 +68,7 @@ const FileInput = ({image} : {
                     )}
                 </div>
                 <label className="flex justify-between items-center mt-3 bg-orange-100 rounded-lg">
-                <input type="file" name="" id="" hidden accept="image/*" onChange={handleFileChange} ref={fileRef}/>
+                <input type="file" name="file" hidden accept="image/*" onChange={handleFileChange} ref={fileRef}/>
                     <div className="flex gap-5 items-center">
                         <FileIcon />
                         <p>{fileName ? fileName : 'No File choosen'}</p>
