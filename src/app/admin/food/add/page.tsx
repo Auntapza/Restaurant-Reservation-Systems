@@ -20,7 +20,7 @@ export default function AddFoodData() {
                             <option value="">Test </option>
                         </select>
                     </div>
-                    <FileInput image="http://localhost/PHP/1/profileImg/download.jpg"/>
+                    <FileInput/>
 
                     <button type="submit" className="w-full p-3 text-3xl text-white bg-orange-500
                     rounded-lg">Add Food!</button>

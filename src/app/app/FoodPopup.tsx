@@ -4,6 +4,9 @@ import Image from 'next/image'
 
 import dummyFoodImage from '@/img/homepage/dummyPopfood.png'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import Button from '@/component/Button'
 
 export default function Foodpopup({isOn, state}: {
     isOn: boolean,
@@ -11,7 +14,9 @@ export default function Foodpopup({isOn, state}: {
 }) {
 
     const [foodCount, setFoodCount] = useState(1);
+    const router = useRouter();
 
+    /// food quantity function manage
     const handleFoodCountControl = (control: string) => {
         if (isOn) {
             if (control === "+" && foodCount < 10) {
@@ -21,6 +26,11 @@ export default function Foodpopup({isOn, state}: {
             }
         }  
     };
+
+    // add to cart function
+    function addtoCart() {
+        router.push('app/cart');
+    }
 
     useEffect(() => {
         setFoodCount(1);        
@@ -50,8 +60,7 @@ export default function Foodpopup({isOn, state}: {
                                 <span>+</span>
                             </div>
                         </div>
-                        <h1 className='text-center text-3xl mb-10 bg-orange-500 w-fit m-auto cursor-pointer p-3 rounded px-10
-                        text-white shadow'>Add to cart</h1>
+                        <Button onClick={() => {addtoCart()}} className='block mx-auto p-3 px-10 text-3xl'>Add to cart</Button>
                     </div>
                 </div>
             </div>

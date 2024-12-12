@@ -6,7 +6,6 @@ import { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react'
 // import image
 import logo from '../img/Logo.png' // logo image
 import bell from '../img/navbar/Bell.svg' // notification icon
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Menubar from './Menubar'
 
@@ -55,7 +54,7 @@ function Navbar() {
             ${show ? 'translate-y-0' : '-translate-y-96'}`}>
                 <div className="container flex justify-between items-center">
                     {/* Logo */}
-                    <Image alt='' onClick={() => {router.push("/app")}} src={logo} className='w-auto h-[30px]'/>
+                    <Image alt='' onClick={() => {router.push("/app")}} src={logo} className='cursor-pointer w-auto h-[30px]'/>
                     <div className='flex gap-12 items-center'>
                         {/* Bell */}
                         <Image alt='' src={bell} className='cursor-pointer fill-black after:bg-red-600 after:content-["1"]

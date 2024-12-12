@@ -1,5 +1,6 @@
 'use client'
 
+import Button from "@/component/Button";
 import promptpay from "@/img/payment/PromptpayLogo.png";
 import wallet from "@/img/payment/truewalletLogo.png";
 import Image, { StaticImageData } from "next/image";
@@ -45,9 +46,9 @@ export default function Payment() {
                 <div></div>
                 <div className="flex items-center gap-7">
                     <p className="text-4xl font-bold">2500฿</p>
-                    <button className="bg-orange-500 rounded-lg text-white py-4 px-8 2xl:text-3xl xl:text-2xl disabled:bg-orange-300
-                    transition disabled:cursor-default" disabled={paymentMethod == ''}
-                    onClick={() => {router.push('payment/process?p='+paymentMethod)}}>Purchase Order</button>
+                    <Button className="py-4 px-8 2xl:text-3xl xl:text-2xl disabled:bg-orange-300
+                    transition" disabled={paymentMethod == ''}
+                    onClick={() => {router.push('payment/process?p='+paymentMethod)}}>Purchase Order</Button>
                 </div>
             </div>
         </div>

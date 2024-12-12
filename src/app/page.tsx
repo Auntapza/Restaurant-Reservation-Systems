@@ -44,7 +44,7 @@ export default function Home() {
   }
 
   return (
-    <>
+    <div className="overflow-x-hidden">
       <Image alt="" src={background} className="absolute lg:right-[-4rem] lg:top-[-5rem] 2xl:h-[120vh] 
       lg:h-[90vh] w-auto object-cover z-0 md:h-[70vh] md:top-[-3rem] md:right-[-4rem]
       translate-x-14"/>
@@ -113,6 +113,6 @@ export default function Home() {
         </div>
 
         <Footer/>
-    </>
+    </div>
   );
 }

@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import wallet from "@/img/payment/walletQr.jpg";
 import promptpay from "@/img/payment/promppayQr.png";
 import Textbox from "@/component/Textbox";
+import Button from "@/component/Button";
 
 
 export default function PayProcess() {
@@ -29,7 +30,7 @@ export default function PayProcess() {
                     <form>
                         <Textbox type="time" placeholder="Pay Time"/>
                         <Textbox type="file" placeholder="Slip Image"/>
-                        <button type="submit" className="mb-5 bg-orange-500 rounded-lg text-white text-3xl py-2 px-6 w-full mt-5">Submit</button>
+                        <Button itemType="Submit" className="mb-5 bg-orange-500 rounded-lg text-white text-3xl py-2 px-6 w-full mt-5">Submit</Button>
                     </form>
                 </div>
             </div>

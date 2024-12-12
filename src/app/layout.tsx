@@ -21,6 +21,7 @@ export const metadata = {
 export default function RootLayout({ children } :{
   children: ReactNode
 }) {
+
   return (
     <html lang="en">
       <head>
@@ -32,7 +33,7 @@ export default function RootLayout({ children } :{
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen overflow-x-hidden`}
       >
         {children}
       </body>

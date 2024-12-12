@@ -1,51 +1,58 @@
-export default function TableSelect({ tableVal } : {
-    tableVal: Dispatch<SetStateAction<String>>
+export default function TableSelect({ tableVal, selectFunction } : {
+    selectFunction: Function,
+    tableVal?: string
 }) {
-
-    const [tableTarget, setTabletarget] = useState<String>('');
-
-    const selectTable = (tableno: string) => {
-        if (tableTarget == tableno) {
-            setTabletarget('');
-        } else {
-            setTabletarget(tableno);
-            tableVal(tableno)
-        }
-    }
 
     return (
         <>
             <div className="grid grid-rows-2 grid-cols-3 w-full justify-items-center">
-                <Table selected={tableTarget == 'A01'} onClick={() => {selectTable("A01")}}/> 
-                <Table selected={tableTarget == 'A02'} onClick={() => {selectTable("A02")}} state={1}/> 
-                <Table selected={tableTarget == 'A03'} onClick={() => {selectTable("A03")}}/> 
-                <Table selected={tableTarget == 'A04'} onClick={() => {selectTable("A04")}}/> 
-                <Table selected={tableTarget == 'A05'} onClick={() => {selectTable("A05")}} state={2}/> 
-                <Table selected={tableTarget == 'A06'} onClick={() => {selectTable("A06")}}/> 
+                <Table selected={tableVal == 'A01'} onClick={(e) => {selectFunction("A01", e)}}/> 
+                <Table selected={tableVal == 'A02'} onClick={(e) => {selectFunction("A02", e)}} state={1}/> 
+                <Table selected={tableVal == 'A03'} onClick={(e) => {selectFunction("A03", e)}}/> 
+                <Table selected={tableVal == 'A04'} onClick={(e) => {selectFunction("A04", e)}}/> 
+                <Table selected={tableVal == 'A05'} onClick={(e) => {selectFunction("A05", e)}} state={2}/> 
+                <Table selected={tableVal == 'A06'} onClick={(e) => {selectFunction("A06", e)}}/> 
             </div>  
         </>
     )
 }
 
 enum State {
+    idle = 0,
     busy = 1,
-    ordered = 2
+    ordered = 2,
 }
 
 import correct from '@/img/correct.png'
 import Image from 'next/image'
-import { Dispatch, MouseEventHandler, SetStateAction, useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { MouseEventHandler, MouseEvent } from 'react'
 
 function Table( {onClick, state, selected} : {
-    onClick?: MouseEventHandler,
-    state?: State,
+    onClick: MouseEventHandler,
+    state?: State | 0,
     selected?: boolean
 } ) {
+
+    const path = usePathname();
+
+    function clickFunction(e:MouseEvent<HTMLButtonElement>) {
+        if (state == 0 || state == undefined) {
+            return onClick(e)
+        } else {
+            if (path.startsWith('/app')) {
+                return () => {}
+            } else {
+                return onClick(e)
+            }
+        }
+    }
+
     return (
         <>
-            <button className="cursor-pointer relative" onClick={onClick} disabled={state == 1 || state == 2}>
+            <button className="cursor-pointer relative" onClick={clickFunction}>
                 {
-                    selected ?
+                    (selected && (state == 0 || state == undefined)) ?
                     (<div className="absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2">
                         <Image className="size-20" src={correct} alt=""/>
                     </div>)
