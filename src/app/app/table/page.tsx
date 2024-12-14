@@ -10,6 +10,7 @@ export default function FindTable() {
     const router = useRouter();
 
     const [tableTarget, setTabletarget] = useState<string>('');
+    const [timeSelect, setTimeSelect] = useState('')
 
     const selectTable = (tableno: string) => {
         if (tableTarget == tableno) {
@@ -18,6 +19,9 @@ export default function FindTable() {
             setTabletarget(tableno);
         }
     }
+
+    console.log();
+    
 
     return (
         <>
@@ -41,16 +45,12 @@ export default function FindTable() {
                         Table : <b>{tableTarget == '' ? 'None' : tableTarget}</b>
                     </p>
                     <p className="font-bold text-2xl">Date : {`${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear()}`}</p>
-                    <select name="" id="" className="border border-black p-3 py-2 rounded-lg text-3xl">
-                        <option value="" className="checked:text-orange-500 hover:text-orange-500">9:00 AM - 10:00 AM</option>
-                        <option value="" className="checked:text-orange-500 hover:text-orange-500">9:00 AM - 10:00 AM</option>
-                        <option value="" className="checked:text-orange-500 hover:text-orange-500">9:00 AM - 10:00 AM</option>
-                        <option value="" className="checked:text-orange-500 hover:text-orange-500">9:00 AM - 10:00 AM</option>
-                        <option value="" className="checked:text-orange-500 hover:text-orange-500">9:00 AM - 10:00 AM</option>
-                        <option value="" className="checked:text-orange-500 hover:text-orange-500">9:00 AM - 10:00 AM</option>
-                    </select>
+                    <input type="time" className="border border-black rounded p-3" onChange={(e) => {
+                        setTimeSelect(e.target.value);
+                    }} />
                     <Button className="px-8 transition py-4 disabled:bg-orange-300"
-                        disabled={tableTarget == ''} onClick={() => { router.push('/app/summery') }}>
+                        disabled={(timeSelect == '' || tableTarget == '')} 
+                        onClick={() => { router.push(`/app/summery?table=${tableTarget}&time=${timeSelect}`) }}>
                             Purchase Order
                     </Button>
                 </div>

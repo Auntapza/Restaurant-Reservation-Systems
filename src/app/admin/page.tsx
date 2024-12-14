@@ -28,8 +28,8 @@ export default function Mainpage() {
             image: <User/>
         },
         {
-            title: 'Revenue Ratio',
-            value: 10,
+            title: 'Today Revenue',
+            value: '3400฿',
             image: <Dashbord/>
         }
         

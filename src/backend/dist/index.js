@@ -9,6 +9,9 @@ const socket_io_1 = require("socket.io");
 const socket_1 = __importDefault(require("./socket/socket"));
 const cors_1 = __importDefault(require("cors"));
 const path_1 = __importDefault(require("path"));
+const getFood_1 = __importDefault(require("./src/user/getFood"));
+const pageData_1 = __importDefault(require("./src/admin/pageData"));
+const client_1 = require("@prisma/client");
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 const server = (0, http_1.createServer)(app);
@@ -19,14 +22,29 @@ const io = new socket_io_1.Server(server, {
         credentials: true
     }
 });
+const prisma = new client_1.PrismaClient;
 app.use('/socket', socket_1.default);
+app.use('/app', getFood_1.default);
+app.use('/admin', pageData_1.default);
 app.get('/image/:filename', (req, res) => {
     const { filename } = req.params;
     const filePath = path_1.default.join(__dirname, '../upload/test', filename);
     res.sendFile(filePath);
 });
-io.on('connection', () => {
+io.on('connection', (socket) => {
     console.log("User connected");
+    socket.on('table update', (tableId, tableStatus) => {
+        if (tableId && tableStatus) {
+            prisma.table.update({
+                where: {
+                    table_id: tableId
+                },
+                data: {
+                    table_status: tableStatus
+                }
+            });
+        }
+    });
 });
 app.get('/', (req, res) => {
     res.json({

@@ -17,7 +17,7 @@ export default function Test() {
         });
       }
 
-    const formSubmit = async (e:FormEvent<HTMLFormElement>) => {
+    const formSubmit = async (e:FormEvent<HTMLFormElement> | any) => {
 
         e.preventDefault();
 
