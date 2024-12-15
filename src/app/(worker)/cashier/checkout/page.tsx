@@ -5,7 +5,7 @@ import Image from "next/image"
 import wallet from "@/img/payment/truewalletLogo.png";
 import promptpay from "@/img/payment/PromptpayLogo.png";
 import Link from 'next/link';
-import { Arrow } from '@/app/app/table/page';
+import Arrow from '@/component/Arrow';
 import { Payment } from '../Popup';
 import { ChangeEvent, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';

@@ -2,11 +2,22 @@
 
 import dummyFoodImage from "@/img/homepage/dummyPopfood.png"
 import Image from 'next/image';
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Summery() {
 
     const rotuer = useRouter();
+    const param = useSearchParams();
+
+    const TableSelect = param.get('table');
+    const time = param.get('time');
+
+    useEffect(() => {
+        if (!TableSelect || !time) {
+            rotuer.replace('table');
+        }
+    }, [])
 
     const CartData = [
         {
@@ -22,8 +33,6 @@ export default function Summery() {
             count: 1
         },
     ]
-
-    const TableSelect = 'A02'
 
     return (
         <>
@@ -66,20 +75,7 @@ export default function Summery() {
                             </table>
                         </div>
                     </div>
-
-                    {/* Price Detail */}
-                    <div className="mb-7">
-                        <p className="text-5xl my-5">Price Detail</p>
-                        <div className="border border-black rounded p-4">
-                            <div className="flex justify-between">
-                                <p className="text-4xl">Reservation Fee</p>
-                                <p className="text-4xl font-bold">20฿</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-                <div />
-                <div />
             </div>
             <div className="fixed bottom-0 w-full flex justify-center bg-white
             border-t shadow-[0_-4px_4px_0_#00000055] py-7 rounded-t-xl mt-6">
@@ -88,7 +84,7 @@ export default function Summery() {
                         Table : <b>{TableSelect}</b>
                     </p>
                     <p className="font-bold text-2xl">Date : {`${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear()}`}</p>
-                    <p className="font-bold text-2xl">Time: 9:00AM - 10:00AM</p>
+                    <p className="font-bold text-2xl">Time: {time}</p>
                     <button className="bg-orange-500 rounded-lg text-white py-4 px-8 2xl:text-3xl xl:text-2xl disabled:bg-orange-300
                     transition disabled:cursor-default"
                     onClick={() => {rotuer.push('payment')}}>Purchase Order</button>
