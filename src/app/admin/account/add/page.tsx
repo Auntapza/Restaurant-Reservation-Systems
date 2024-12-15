@@ -1,6 +1,6 @@
 'use client'
 
-import { Arrow } from "@/app/app/table/page";
+import Arrow from "@/component/Arrow";
 import Textbox from "@/component/Textbox";
 import { useRouter } from "next/navigation";
 
@@ -16,11 +16,11 @@ export default function Main() {
             <div className="bg-white rounded-lg shadow p-5">
                 <p className="text-3xl">Add new Worker Account</p>
                 <form className="flex flex-col gap-5 mt-5">
-                    <Textbox placeholder="Username"/>
+                    <Textbox type="text" placeholder="Username"/>
                     <Textbox placeholder="Password" type="password"/>
                     <div className="grid grid-cols-2 gap-5">
-                        <Textbox placeholder="Firstname"/>
-                        <Textbox placeholder="Lastname"/>
+                        <Textbox type="text" placeholder="Firstname"/>
+                        <Textbox type="text" placeholder="Lastname"/>
                     </div>
                     <div>
                         <label>Role</label>

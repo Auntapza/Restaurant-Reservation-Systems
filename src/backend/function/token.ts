@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { tokenPayload } from '../interface'
+import { tokenPayload } from '../src/interface'
 
 const key = '!@1234'
 

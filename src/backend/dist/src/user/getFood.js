@@ -63,7 +63,7 @@ router.get('/cartList/:userid', (req, res) => __awaiter(void 0, void 0, void 0, 
         };
     });
     res.status(200).json({
-        cartList: format
+        cartList: format,
     });
 }));
 exports.default = router;

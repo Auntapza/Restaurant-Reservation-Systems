@@ -18,7 +18,7 @@ model Account {
   acc_fname   String
   acc_lname   String
   role        Role
-  date_create DateTime
+  date_create DateTime @default(now())
 
   Cart    Cart[]
   Rating  Rating[]
@@ -91,7 +91,7 @@ model Order {
   order_id     Int       @id @default(autoincrement())
   order_date   DateTime @default(now())
   table_id     String
-  time        DateTime
+  time         DateTime
   recipt_file  String?
   order_status OrderStatus
   acc_id       Int

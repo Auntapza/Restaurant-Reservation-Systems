@@ -10,8 +10,8 @@ export default function AddFoodData() {
                 <span className="text-slate-400 text-xl">Add new menu for your Restaurant</span>
 
                 <form action="" className="grid grid-rows-auto gap-5 mt-10">
-                    <Textbox placeholder="Food name"/>
-                    <Textbox placeholder="Food Price"/>
+                    <Textbox type="text" placeholder="Food name"/>
+                    <Textbox type="number" placeholder="Food Price"/>
                     <div>
                         <p className="text-xl">Food Category</p>
                         <select className="w-full border rounded mt-2 border-black p-2 text-xl">

@@ -98,9 +98,34 @@ router.get('/', async(req, res) => {
     let revenuData:number[] = [];
 
     for(let i = 0; i < 7; i++) {
-        
+
+        const day = start.setDate(start.getDate() + 1);
+        const currentDay = new Date(day);
+        const end = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate(), 23, 59, 59);
+        let sum = 0
+        AllOrder.map(e => {
+            if (e.order_date < end) {
+                e.OrderDetail.map(e => {
+                    sum += (e.Food.food_price * e.quantity)
+                })
+            }
+        })
+
+        revenuData = [...orderData, sum];
+
     }
 
+    res.status(200).json({
+        totalMenu,
+        totalOrder,
+        totalClient,
+        todayRevenu,
+        chart: {
+            ChartLabel,
+            revenuData,
+            orderData
+        }
+    })
 
 })
 

@@ -3,11 +3,11 @@ import { createServer } from 'http';
 import { Server } from 'socket.io'
 import router from './socket/socket';
 import cors from 'cors'
-import path from 'path';
 
 import getFood from './src/user/getFood';
-import adminApi from './src/admin/pageData'
+import adminApi from './src/admin/center'
 import { PrismaClient } from '@prisma/client';
+import imageShow from './src/img/center'
 
 const app = express();
 app.use(cors());
@@ -27,14 +27,7 @@ const prisma = new PrismaClient
 app.use('/socket', router);
 app.use('/app', getFood);
 app.use('/admin', adminApi);
-
-app.get('/image/:filename', (req, res) => {
-    const { filename } = req.params;
-    const filePath = path.join(__dirname, '../upload/test', filename);
-
-    res.sendFile(filePath)
-
-})
+app.use('/image', imageShow);
 
 io.on('connection', (socket) => {
     console.log("User connected");
@@ -50,12 +43,6 @@ io.on('connection', (socket) => {
                 }
             })
         }
-    })
-})
-
-app.get('/', (req, res) => {
-    res.json({
-        msg: 'test normal api'
     })
 })
 

@@ -4,10 +4,13 @@ import { Home } from "@/img/svg/svg"
 import { WorkerType } from "@/interface/interface"
 import Link from "next/link"
 import { Logout } from "../Menubar"
+import { useRouter } from "next/navigation"
 
 export default function Sidebar({type} : {
     type: WorkerType
 }) {
+
+    const router = useRouter();
 
     let SideMenu:{
         icon: JSX.Element,
@@ -24,7 +27,7 @@ export default function Sidebar({type} : {
     }
 
     function logout() {
-        /// logout function code...
+        router.push('/');
     }
 
     return (

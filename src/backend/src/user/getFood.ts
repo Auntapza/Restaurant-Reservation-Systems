@@ -64,7 +64,7 @@ router.get('/cartList/:userid', async(req, res) => {
     })
 
     res.status(200).json({
-        cartList: format
+        cartList: format,
     })
 
 })
