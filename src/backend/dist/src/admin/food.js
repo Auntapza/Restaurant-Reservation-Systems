@@ -16,6 +16,7 @@ const client_1 = require("@prisma/client");
 const express_1 = __importDefault(require("express"));
 const fs_1 = __importDefault(require("fs"));
 const router = (0, express_1.default)();
+router.use(express_1.default.json({ limit: '100mb' }));
 const prisma = new client_1.PrismaClient();
 // get all food Data
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -26,7 +27,8 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             foodId: e.food_id,
             foodImg: e.food_img,
             foodPrice: e.food_price,
-            foodName: e.food_name
+            foodName: e.food_name,
+            catId: e.cat_id
         })),
         category: category.map(e => ({
             catId: e.cat_id,
@@ -47,7 +49,8 @@ router.get('/:foodId', (req, res) => __awaiter(void 0, void 0, void 0, function*
             foodId: data === null || data === void 0 ? void 0 : data.food_id,
             foodImg: data === null || data === void 0 ? void 0 : data.food_img,
             foodPrice: data === null || data === void 0 ? void 0 : data.food_price,
-            foodName: data === null || data === void 0 ? void 0 : data.food_name
+            foodName: data === null || data === void 0 ? void 0 : data.food_name,
+            catId: data.cat_id
         });
     }
     else {
@@ -69,8 +72,8 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         createdData = yield prisma.food.create({
             data: {
                 food_name: foodName,
-                food_price: foodPrice,
-                cat_id: catId,
+                food_price: Number(foodPrice),
+                cat_id: Number(catId),
                 food_img: foodImgPath
             }
         });
@@ -79,8 +82,8 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         createdData = yield prisma.food.create({
             data: {
                 food_name: foodName,
-                food_price: foodPrice,
-                cat_id: catId
+                food_price: Number(foodPrice),
+                cat_id: Number(catId)
             }
         });
     }
@@ -103,8 +106,8 @@ router.put('/:foodId', (req, res) => __awaiter(void 0, void 0, void 0, function*
         createdData = yield prisma.food.update({
             data: {
                 food_name: foodName,
-                food_price: foodPrice,
-                cat_id: catId,
+                food_price: Number(foodPrice),
+                cat_id: Number(catId),
                 food_img: foodImgPath
             },
             where: {
@@ -116,8 +119,8 @@ router.put('/:foodId', (req, res) => __awaiter(void 0, void 0, void 0, function*
         createdData = yield prisma.food.update({
             data: {
                 food_name: foodName,
-                food_price: foodPrice,
-                cat_id: catId
+                food_price: Number(foodPrice),
+                cat_id: Number(catId)
             },
             where: {
                 food_id: Number(foodId)
@@ -125,7 +128,7 @@ router.put('/:foodId', (req, res) => __awaiter(void 0, void 0, void 0, function*
         });
     }
     res.status(201).json({
-        msg: "Create Data successfuly",
+        msg: "Update Data successfully",
         data: createdData
     });
 }));

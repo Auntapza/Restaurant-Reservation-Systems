@@ -8,6 +8,7 @@ import getFood from './src/user/getFood';
 import adminApi from './src/admin/center'
 import { PrismaClient } from '@prisma/client';
 import imageShow from './src/img/center'
+import testImage from './socket/socket'
 
 const app = express();
 app.use(cors());
@@ -28,6 +29,7 @@ app.use('/socket', router);
 app.use('/app', getFood);
 app.use('/admin', adminApi);
 app.use('/image', imageShow);
+app.use('/', testImage)
 
 io.on('connection', (socket) => {
     console.log("User connected");

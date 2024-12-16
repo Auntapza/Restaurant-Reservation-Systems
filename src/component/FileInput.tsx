@@ -1,15 +1,16 @@
 'use client'
 
 import Image from "next/image";
-import { ChangeEvent, DragEvent, HtmlHTMLAttributes, useEffect, useRef, useState } from "react";
+import { ChangeEvent, Dispatch, DragEvent, HtmlHTMLAttributes, SetStateAction, useEffect, useRef, useState } from "react";
 import { FileIcon, Trash, Upload as UploadIcon } from '@/img/svg/svg'
 
 interface inputInterface extends HtmlHTMLAttributes<HTMLInputElement> {
-    image?: string
+    image?: string,
+    value?: Dispatch<SetStateAction<any>>
 }
 
 /// file Input component
-const FileInput = ({image, ...rest} :inputInterface) => {
+const FileInput = ({image, value, ...rest} :inputInterface) => {
     
     const [preview, setPreview] = useState<string>()
     const [fileName, setFileName] = useState<string>();
@@ -19,17 +20,23 @@ const FileInput = ({image, ...rest} :inputInterface) => {
         if (e.target.files) {
             const imgLink = URL.createObjectURL(e.target.files[0])
             setPreview(imgLink);
-            setFileName(e.target.files[0].name);            
+            setFileName(e.target.files[0].name); 
+            if (value) {
+                value(e.target.files[0]);
+            }           
         }
         
     }
-
+    
     const removeImg = () => {
         if (fileRef.current) {
             fileRef.current.value = '';
         }
         setPreview('');
         setFileName('');
+        if (value) {
+            value(null);           
+        }
     }
 
     const DropFileHandler = (e:DragEvent<HTMLDivElement>) => {
@@ -41,6 +48,9 @@ const FileInput = ({image, ...rest} :inputInterface) => {
         }
         setPreview(URL.createObjectURL(e.dataTransfer.files[0]));
         setFileName(e.dataTransfer.files[0].name);
+        if (value) {
+            value(e.dataTransfer.files[0]);    
+        }       
     }
     
     useEffect(() => {

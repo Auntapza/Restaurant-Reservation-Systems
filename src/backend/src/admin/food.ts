@@ -1,8 +1,10 @@
 import { PrismaClient } from '@prisma/client';
 import express from 'express';
 import fs from 'fs'
+import path from 'path';
 
 const router = express();
+router.use(express.json({limit: '100mb'}))
 
 const prisma = new PrismaClient();
 
@@ -18,7 +20,8 @@ router.get('/', async(req, res) => {
             foodId: e.food_id,
             foodImg: e.food_img,
             foodPrice: e.food_price,
-            foodName: e.food_name
+            foodName: e.food_name,
+            catId: e.cat_id
         })),
         category: category.map(e => ({
             catId: e.cat_id,
@@ -44,7 +47,8 @@ router.get('/:foodId', async(req, res) => {
             foodId: data?.food_id,
             foodImg: data?.food_img,
             foodPrice: data?.food_price,
-            foodName: data?.food_name
+            foodName: data?.food_name,
+            catId: data.cat_id
         });
     } else {
         res.status(403).json({
@@ -54,12 +58,11 @@ router.get('/:foodId', async(req, res) => {
  
 })
 
-
 //insert new food Data
 router.post('/', async(req, res) => {
 
     const { foodName, foodPrice, catId, foodImg } = req.body;
-
+    
     let createdData
 
     if (foodImg) {
@@ -73,8 +76,8 @@ router.post('/', async(req, res) => {
         createdData = await prisma.food.create({
             data: {
                 food_name: foodName,
-                food_price: foodPrice,
-                cat_id: catId,
+                food_price: Number(foodPrice),
+                cat_id: Number(catId),
                 food_img: foodImgPath
             }
         })
@@ -82,8 +85,8 @@ router.post('/', async(req, res) => {
         createdData = await prisma.food.create({
             data: {
                 food_name: foodName,
-                food_price: foodPrice,
-                cat_id: catId
+                food_price: Number(foodPrice),
+                cat_id: Number(catId)
             }
         })
     }
@@ -115,8 +118,8 @@ router.put('/:foodId', async(req, res) => {
         createdData = await prisma.food.update({
             data: {
                 food_name: foodName,
-                food_price: foodPrice,
-                cat_id: catId,
+                food_price: Number(foodPrice),
+                cat_id: Number(catId),
                 food_img: foodImgPath
             },
             where: {
@@ -127,8 +130,8 @@ router.put('/:foodId', async(req, res) => {
         createdData = await prisma.food.update({
             data: {
                 food_name: foodName,
-                food_price: foodPrice,
-                cat_id: catId
+                food_price: Number(foodPrice),
+                cat_id: Number(catId)
             },
             where: {
                 food_id: Number(foodId)
@@ -137,7 +140,7 @@ router.put('/:foodId', async(req, res) => {
     }
 
     res.status(201).json({
-        msg: "Create Data successfuly",
+        msg: "Update Data successfully",
         data: createdData
     })
 
