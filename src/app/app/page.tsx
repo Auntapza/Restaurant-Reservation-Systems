@@ -1,55 +1,67 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 
 // import image
 import glasses from '@/img/mainpage/Search.svg'
-import dummyFoodCard from "@/img/mainpage/dummyText.png"
-import star from "@/img/homepage/star.png"
 import Foodpopup from './FoodPopup'
 import Footer from '@/component/Footer'
+import { foodData } from '@/interface/interface'
+import FoodList from './FoodList'
 
 function Mainpage() {
 
     const [menuDetails, setMenuDetails] = useState(false);
-
+    const [foodPopupData, setFoodPopupData] = useState<foodData>();
+    const [catSelect, setCatSelect] = useState<number>(0);
+    const [searchVal, setSearchVal] = useState<string>('');
+    
     // For category looping
     const CategoryData = [
         {
-            image: <Fork/>,
-            text: "Main Course"
+            image: <Drink/>,
+            text: "Drink",
+            id: 1,
         },
         {
             image: <Donut/>,
-            text: "Snack"
+            text: "Snack",
+            id: 2,
         },
         {
-            image: <Drink/>,
-            text: "Drink"
+            image: <Fork/>,
+            text: "Main Course",
+            id: 3,
         },
     ];
 
-    const FoodCard = () => {
-        return (
-            <div onClick={() => {setMenuDetails(true)}} className='bg-white border border-black rounded-md shadow-xl p-5 grid gap-y-2 hover:scale-110 transition hover:border-orange-500'>
-                <Image alt='' src={dummyFoodCard}/>
-                <p className='text-3xl'>Foodname</p>
-                <div className='flex items-center text-xl'>
-                    <span>4.5</span>
-                    <Image alt='' src={star} className='scale-75'/>
-                </div>
-
-                <p className='text-xl pt-8'>299฿</p>
-
-            </div>
-        );
+    function selectCategory(value:number) {
+        if (catSelect == value) {
+            setCatSelect(0);
+        } else {
+            setCatSelect(value);
+        }
     }
+
+    useEffect(() => {
+        if (foodPopupData) {
+            setMenuDetails(true);
+        } else {
+            setMenuDetails(false);
+        }
+    }, [foodPopupData])
+
+    useEffect(() => {
+        if (menuDetails == false) {
+            setFoodPopupData(undefined);
+        }
+    }, [menuDetails])
 
     return (
 
         <>
-            <Foodpopup isOn={menuDetails} state={setMenuDetails}/>
+            <Foodpopup data={foodPopupData as foodData} isOn={menuDetails} state={setMenuDetails}/>
             {/* Banner */}
             <div className='h-[30rem] bg-gray-500'></div>
 
@@ -58,15 +70,15 @@ function Mainpage() {
             my-10 after:-z-50 after:top-1/2'>
                 <span className='text-5xl font-bold text-center bg-white px-10'>Category</span>
             </div>
-            <div className='flex justify-center items-center border-b-[2px] border-black pb-10'>
+            <div className='flex flex-row-reverse justify-center items-center border-b-[2px] border-black pb-10'>
                 {/* Loop Category button */}
                 {CategoryData.map((e, index) => (
-                    <div key={index} className="container flex justify-evenly items-center">
-                        <div className='flex flex-col items-center gap-2 cursor-pointer group'>
-                            <div className='border border-black p-4 rounded-full group-hover:border-orange-600'>
+                    <div key={index} onClick={() => {selectCategory(index+1)}} className="container flex justify-evenly items-center">
+                        <div className={`flex flex-col items-center gap-2 cursor-pointer group`}>
+                            <div className={`border p-4 rounded-full group-hover:border-orange-600 ${catSelect == e.id ? 'border-orange-500' : 'border-black'}`}>
                                 {e.image}
                             </div>
-                            <span className='font-bold text-2xl group-hover:text-orange-600 transition'>{e.text}</span>
+                            <span className={`font-bold text-2xl group-hover:text-orange-600 transition ${catSelect == e.id ? 'text-orange-500' : ''}`}>{e.text}</span>
                         </div>
                     </div>
                 ))}
@@ -77,18 +89,22 @@ function Mainpage() {
 
             <div className='flex justify-center items-center gap-5 my-12'>
                 <span className='font-bold text-3xl'>Search</span>
-                <input type="text" className='border ps-2 border-black rounded w-96 text-2xl p-1' placeholder='Write something'/>
+                <form onSubmit={(e:any) => {
+                    e.preventDefault();
+
+                    setSearchVal(e.target.text.value);
+                }}>
+                    <input type="text"
+                    className='border ps-2 border-black rounded w-96 text-2xl p-1' 
+                    placeholder='Write something' name='text'
+                    />
+                    <button type='submit'></button>
+                </form>
                 <Image alt='' src={glasses} className='cursor-pointer'/>
             </div>
 
             <div className='flex justify-center'>
-                <div className="container grid 2xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 justify-items-center gap-y-9">
-                    {Array.from({length: 12}).map((m, index) => {
-                        return (
-                            <FoodCard key={index}/>
-                        )
-                    })}
-                </div>
+                <FoodList setFoodPopup={setFoodPopupData} cat={catSelect} searchVal={searchVal}/>
             </div>
 
             <Footer/>

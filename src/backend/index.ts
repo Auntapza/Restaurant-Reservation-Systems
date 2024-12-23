@@ -9,9 +9,14 @@ import adminApi from './src/admin/center'
 import { PrismaClient } from '@prisma/client';
 import imageShow from './src/img/center'
 import testImage from './socket/socket'
+import auth from './src/auth/center'
+import cart from './src/user/cart'
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
 
 const server = createServer(app);
 const io = new Server(server, {
@@ -30,6 +35,8 @@ app.use('/app', getFood);
 app.use('/admin', adminApi);
 app.use('/image', imageShow);
 app.use('/', testImage)
+app.use('/', auth)
+app.use('/cart', cart)
 
 io.on('connection', (socket) => {
     console.log("User connected");

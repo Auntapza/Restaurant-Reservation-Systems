@@ -1,21 +1,24 @@
 import jwt from 'jsonwebtoken'
-import { tokenPayload } from '../src/interface'
 
-const key = '!@1234'
+const key = '!@12345'
 
-export function createToken(payload:tokenPayload) {
+export function createToken(payload:object) {
 
     return jwt.sign(payload, key, {
-        algorithm: 'ES256',
-        expiresIn: '1h'
+        expiresIn: '1h',
+        algorithm: 'HS256'
     })
 
 }
 
 export function verifyToken(token:string) {
 
-    const payload = jwt.verify(token, key);
+    try {
+        const payload = jwt.verify(token, key);
 
-    return payload ? true : false
+        return payload as jwt.JwtPayload
+    } catch {
+        return false;
+    }
 
 }

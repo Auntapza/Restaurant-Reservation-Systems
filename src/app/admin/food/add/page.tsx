@@ -69,7 +69,7 @@ export default function AddFoodData() {
                         <p className="text-xl">Food Category</p>
                         <select className="w-full border rounded mt-2 border-black p-2 text-xl" onChange={(e:ChangeEvent<HTMLSelectElement>) => {
                             setCatId(Number(e.target.value))
-                        }} value="3">
+                        }} defaultValue="3">
                             {cat.map((e, index) => <option value={e.catId} key={index}>{e.catName}</option>)}
                         </select>
                     </div>

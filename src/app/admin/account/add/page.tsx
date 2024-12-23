@@ -15,7 +15,7 @@ export default function Main() {
             </button>
             <div className="bg-white rounded-lg shadow p-5">
                 <p className="text-3xl">Add new Worker Account</p>
-                <form className="flex flex-col gap-5 mt-5">
+                <form className="flex flex-col gap-5 mt-5" onSubmit={(e) => {e.preventDefault()}}>
                     <Textbox type="text" placeholder="Username"/>
                     <Textbox placeholder="Password" type="password"/>
                     <div className="grid grid-cols-2 gap-5">

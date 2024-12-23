@@ -13,8 +13,13 @@ const center_1 = __importDefault(require("./src/admin/center"));
 const client_1 = require("@prisma/client");
 const center_2 = __importDefault(require("./src/img/center"));
 const socket_2 = __importDefault(require("./socket/socket"));
+const center_3 = __importDefault(require("./src/auth/center"));
+const cart_1 = __importDefault(require("./src/user/cart"));
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
 const server = (0, http_1.createServer)(app);
 const io = new socket_io_1.Server(server, {
     cors: {
@@ -29,6 +34,8 @@ app.use('/app', getFood_1.default);
 app.use('/admin', center_1.default);
 app.use('/image', center_2.default);
 app.use('/', socket_2.default);
+app.use('/', center_3.default);
+app.use('/cart', cart_1.default);
 io.on('connection', (socket) => {
     console.log("User connected");
     socket.on('table update', (tableId, tableStatus) => {

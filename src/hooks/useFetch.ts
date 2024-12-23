@@ -1,24 +1,33 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
-export default function useFetch<T, >(api: string): [T | any, boolean, () => Promise<void>, number] {
+interface useFetchDataInterface {
+    url: string,
+    params?: Record<string, string | number>,
+    dependencies?: any[];
+}
 
-    const [data, setData] = useState<T | object[]>([]);
+export default function useFetchData<T>({url, params, dependencies = []}:useFetchDataInterface){
+
+    const [data, setData] = useState<T>();
     const [loader, setLoader] = useState<boolean>(true);
-    const [status, setStatus] = useState<number>(0)
-  
-    const fetchData = async() => {
+
+    const queryString = params ? `?${new URLSearchParams(params as Record<string, string>)}`
+    : "";
+
+    const apiEndPoint = url + queryString;
+
+    async function fetchData() {
         setLoader(true);
-        const res = await fetch(api)
-        const data = await res.json()
+        const res = await fetch(apiEndPoint);
+        const data = await res.json();
         setData(data);
         setLoader(false);
-        setStatus(res.status);
     }
 
     useEffect(() => {
-        fetchData()
-    }, [])
+        fetchData();
+    }, [url, ...dependencies])
 
-    return [data, loader, fetchData, status];
-        
+    return { data, loader, fetchData };
+
 }

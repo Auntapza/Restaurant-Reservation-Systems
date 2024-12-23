@@ -15,3 +15,19 @@ export enum WorkerType {
     chef,
     waiter
 }
+
+export interface foodData {
+    foodName: string,
+    foodPrice: number,
+    foodImg: string,
+    foodId: number,
+    catId: number
+}
+
+export interface cartData {
+    foodId: number,
+    foodName: string,
+    foodImg: string,
+    foodPrice: number,
+    quantity: number
+}
