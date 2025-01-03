@@ -103,7 +103,7 @@ export default function AddFoodData() {
                     <FileInput value={setFile} image={old?.foodImg}/>
 
                     <button type="submit" className="w-full p-3 text-3xl text-white bg-orange-500
-                    rounded-lg">Add Food!</button>
+                    rounded-lg">Edit Food Detail!</button>
                 </form>
             </div>
         </>

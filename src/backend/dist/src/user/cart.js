@@ -31,15 +31,20 @@ function getAllCartList(userid) {
                 }
             }
         });
-        return cartList === null || cartList === void 0 ? void 0 : cartList.CartDetail.map(e => {
-            return {
-                foodId: e.Food.food_id,
-                foodName: e.Food.food_name,
-                foodImg: e.Food.food_img,
-                foodPrice: e.Food.food_price,
-                quantity: e.quantity
-            };
-        });
+        if (cartList) {
+            return cartList === null || cartList === void 0 ? void 0 : cartList.CartDetail.map(e => {
+                return {
+                    foodId: e.Food.food_id,
+                    foodName: e.Food.food_name,
+                    foodImg: e.Food.food_img,
+                    foodPrice: e.Food.food_price,
+                    quantity: e.quantity
+                };
+            });
+        }
+        else {
+            return [];
+        }
     });
 }
 router.get('/:userId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -86,7 +91,7 @@ router.post('/:userId', (req, res) => __awaiter(void 0, void 0, void 0, function
                             }
                         },
                         data: {
-                            quantity: Number(data[0].quantity) + 1
+                            quantity: Number(data[0].quantity) + quantity
                         }
                     });
                 }
@@ -190,7 +195,7 @@ router.put('/:userId', (req, res) => __awaiter(void 0, void 0, void 0, function*
 router.delete('/:userId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { foodId } = req.body;
     const { userId } = req.params;
-    if (!(foodId && userId)) {
+    if (!foodId && !userId) {
         res.status(400).json({
             msg: "Missing Data"
         });

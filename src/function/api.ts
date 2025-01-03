@@ -49,8 +49,14 @@ class Api {
         return fetchRes;
     }
 
-    delete(link:string){
-        const fetchRes = fetch(link).then(async (response) => {
+    delete(link:string, body?:object){
+        const fetchRes = fetch(link, {
+          method: "DELETE",
+          body: JSON.stringify(body),
+          headers: {
+            'content-type': 'application/json'
+          }
+        }).then(async (response) => {
             if (!response.ok) {
               const errorData = await response.json();
               throw new Error(errorData.msg || 'Fetch Api Fail');

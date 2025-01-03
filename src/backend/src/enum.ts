@@ -5,3 +5,9 @@ enum Role {
     chef,
     waiter
 }
+
+enum tableStatus {
+    "idle",
+    "busy",
+    "ordered"
+}

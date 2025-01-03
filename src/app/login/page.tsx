@@ -36,7 +36,7 @@ function Login() {
         router.push('/app');
         
       } catch(err) {
-        
+        console.log(err);
       }
 
   }

@@ -31,3 +31,14 @@ export interface cartData {
     foodPrice: number,
     quantity: number
 }
+
+export interface tableStatus {
+    tableId: string,
+    tableStatus: TableState
+}
+
+export enum TableState {
+    "idle",
+    "busy",
+    "ordered"
+}

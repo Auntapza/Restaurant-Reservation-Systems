@@ -1,12 +1,17 @@
 'use client'
 
 import { Dish } from "@/img/svg/svg";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import dummyImage from '@/img/homepage/dummyPopfood.png'
 import Link from "next/link";
 import { ChangeEvent, useEffect, useState } from "react";
+import api from "@/function/api";
+import toast from "react-hot-toast";
+import useFetchData from "@/hooks/useFetch";
+import Loading from "@/component/Load";
+import FoodCardLoader from "@/component/load/foodCartLoader";
 
 interface pageData {
     foodList: {
@@ -23,11 +28,13 @@ interface pageData {
 }
 
 export default function Foodmanagement() {
-
+    
     const router = useRouter();
-    const [data, setData] = useState<pageData>();
     const [show, setShow] = useState([]);
-
+    const { data, loader, fetchData } = useFetchData<pageData>({
+        url: 'http://localhost:4000/admin/food'
+    })
+    
     const showFoodbyCat = (e:ChangeEvent<HTMLSelectElement>) => {
 
         const val = Number(e.target.value);
@@ -43,14 +50,11 @@ export default function Foodmanagement() {
         })
 
         setShow(food?.filter(e => e != undefined) as any);
-        console.log(food?.filter(e => e != undefined));
-
     }
 
     useEffect(() => {
-        fetch('http://localhost:4000/admin/food').then(res => res.json())
-        .then(res => {setData(res);setShow(res.foodList)})
-    }, [])
+        setShow(data?.foodList as any)
+    }, [data])
 
     return (
         <>
@@ -74,20 +78,43 @@ export default function Foodmanagement() {
             </div>
             <p className="text-4xl mt-5">All menu</p>
             <div className="mt-3 bg-white rounded-lg shadows size-full grid grid-cols-4 p-5 gap-4">
-                {show?.map((e, index) => <FoodCard data={e} key={index}/>)}
+                <Loading fallback={<FoodCardLoader/>} loadding={loader}>
+                    {show?.map((e, index) => <FoodCard data={e} key={index} reloadFunc={() => {
+                        fetchData()
+                    }}/>)}
+                </Loading>
             </div>
         </>
     )
 }
 
-const FoodCard = ({ data }: {
+const FoodCard = ({ data, reloadFunc }: {
     data: {
         foodName: string,
         foodPrice: number,
         foodId: number,
         foodImg?: string
-    }
+    },
+    reloadFunc: () => void
 }) => {
+
+    const DeleteFood = async() => {
+        try {
+            const res = api.delete('http://localhost:4000/admin/food/'+data.foodId)
+
+            toast.promise(res, {
+                loading: "Deleting this Food",
+                success: "Food has been delete",
+                error: (res) => {
+                    return res.msg
+                }
+            })
+
+            reloadFunc();
+
+        } catch{}
+    }
+
     return (
         <div className="border border-black rounded shadow overflow-hidden">
             <Image src={data.foodImg ? data.foodImg : dummyImage} width={1000} height={1000} alt="" className="w-full object-cover h-52"/>
@@ -98,7 +125,8 @@ const FoodCard = ({ data }: {
             <div className="grid grid-cols-2 px-3 my-6 gap-3">
                 <Link href={`./food/edit?id=${data.foodId}`} className="bg-white text-orange-500 border-2 border-orange-500 hover:text-white
                 hover:bg-orange-500 text-3xl transition-all text-center rounded p-2">Edit</Link>
-                <button className="bg-red-600 text-white text-3xl transition-all rounded p-2">Delete</button>
+                <button onClick={DeleteFood}
+                className="bg-red-600 text-white text-3xl transition-all rounded p-2">Delete</button>
             </div>
         </div>
     )

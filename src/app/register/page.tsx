@@ -53,9 +53,9 @@ const Signup: React.FC = () => {
 
         if (res.status == 200) {
           router.push('/login')
-          console.log(res);
         } else {
           console.log(res);
+          
         }
 
       } catch {

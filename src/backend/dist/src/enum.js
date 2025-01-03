@@ -7,3 +7,9 @@ var Role;
     Role[Role["chef"] = 3] = "chef";
     Role[Role["waiter"] = 4] = "waiter";
 })(Role || (Role = {}));
+var tableStatus;
+(function (tableStatus) {
+    tableStatus[tableStatus["idle"] = 0] = "idle";
+    tableStatus[tableStatus["busy"] = 1] = "busy";
+    tableStatus[tableStatus["ordered"] = 2] = "ordered";
+})(tableStatus || (tableStatus = {}));

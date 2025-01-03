@@ -16,9 +16,9 @@ export function verifyToken(token:string) {
     try {
         const payload = jwt.verify(token, key);
 
-        return payload as jwt.JwtPayload
+        return payload;
     } catch {
-        return false;
+        return undefined;
     }
 
 }

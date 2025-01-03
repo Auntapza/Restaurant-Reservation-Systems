@@ -19,6 +19,6 @@ function verifyToken(token) {
         return payload;
     }
     catch (_a) {
-        return false;
+        return undefined;
     }
 }

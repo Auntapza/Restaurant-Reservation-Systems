@@ -1,9 +1,11 @@
 'use client'
 
+import cart from "@/function/cart";
 import dummyFoodImage from "@/img/homepage/dummyPopfood.png"
+import { cartData } from "@/interface/interface";
 import Image from 'next/image';
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Summery() {
 
@@ -13,26 +15,21 @@ export default function Summery() {
     const TableSelect = param.get('table');
     const time = param.get('time');
 
+    const [cartItem, setCartItem] = useState<cartData[]>([]);
+
     useEffect(() => {
         if (!TableSelect || !time) {
             rotuer.replace('table');
         }
-    }, [])
 
-    const CartData = [
-        {
-            image: dummyFoodImage,
-            name: "Pizza",
-            price: 150,
-            count: 1
-        },
-        {
-            image: dummyFoodImage,
-            name: "Pizza",
-            price: 150,
-            count: 1
-        },
-    ]
+        async function getCratData() {
+            const data = await cart.get();
+            setCartItem(data)
+        }
+
+        getCratData();
+
+    }, [])
 
     return (
         <>
@@ -54,20 +51,20 @@ export default function Summery() {
                                     </tr>
                                 </thead>
                                 <tbody className="text-center">
-                                    {CartData.map((e, index) => {
+                                    {cartItem.map((e, index) => {
                                         return (
                                             <tr key={index}>
                                                 <td className="grid place-items-center">
-                                                    <Image src={e.image} alt="" className="w-24 h-24 rounded" />
+                                                    <Image width={100} height={100} src={e.foodImg} alt="" className="w-24 h-24 rounded" />
                                                 </td>
-                                                <td>{e.name}</td>
-                                                <td>{e.price}฿</td>
+                                                <td>{e.foodName}</td>
+                                                <td>{e.foodPrice}฿</td>
                                                 <td className="text-start">
                                                     <div className='flex gap-x-2 items-center justify-evenly'>
-                                                        <span className='text-xl'>{e.count}</span>
+                                                        <span className='text-xl'>{e.quantity}</span>
                                                     </div>
                                                 </td>
-                                                <td>{e.price * e.count}฿</td>
+                                                <td>{e.foodPrice * e.quantity}฿</td>
                                             </tr>
                                         )
                                     })}

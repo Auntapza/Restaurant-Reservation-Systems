@@ -20,16 +20,10 @@ export async function middleware(request: NextRequest) {
                 }
             });
 
-            if (payload.Role === 'admin') {
-                return NextResponse.redirect(new URL('/admin', request.url))            
-            } else if (payload.Role === 'cashier') {
-                return NextResponse.redirect(new URL('/cashier', request.url))            
-            } else if (payload.Role === 'chef') {
-                return NextResponse.redirect(new URL('/chef', request.url))            
-            } else if (payload.Role === 'waiter') {
-                return NextResponse.redirect(new URL('/waiter', request.url))            
+            if (payload.Role !== 'customer') {
+                return NextResponse.redirect(new URL('/login', request.url))            
             }
-
+            
         } catch {
             return NextResponse.redirect(new URL('/login', request.url))            
         }

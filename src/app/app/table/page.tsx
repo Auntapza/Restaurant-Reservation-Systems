@@ -23,7 +23,7 @@ export default function FindTable() {
 
     return (
         <>
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center mt-4 min-h-screen">
                 <div className="container">
                     <button onClick={() => { router.back() }} className="flex gap-3 text-4xl items-center w-fit">
                         <Arrow className="size-16" />

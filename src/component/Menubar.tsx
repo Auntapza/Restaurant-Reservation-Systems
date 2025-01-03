@@ -114,7 +114,7 @@ function Menubar({state, set} : {
                     </div>
 
                     {/* Logout Section */}
-                    <button onClick={() => {router.replace('/')}} className="border-t border-black p-8">
+                    <button onClick={() => {Logout()}} className="border-t border-black p-8">
                         <div className="flex items-center cursor-pointer transition group gap-4 hover:-translate-x-1 hover:scale-105 hover:shadow">
                             <Logout />
                             <span className="font-bold text-[#f00] text-2xl transition duration-200">Logout</span>

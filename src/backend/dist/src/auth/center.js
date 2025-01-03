@@ -27,15 +27,34 @@ router.get('/auth', (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     const token = req.cookies['token'];
     if (token) {
         const tokenPayload = (0, token_1.verifyToken)(token);
-        if (tokenPayload.Role === 'customer') {
-            res.status(200).json(tokenPayload);
+        if (tokenPayload) {
+            const userData = yield prisma.account.findUnique({
+                where: {
+                    acc_id: Number(tokenPayload.userId)
+                }
+            });
+            if (userData) {
+                res.status(200).json(tokenPayload);
+            }
+            else {
+                res.status(402).json({
+                    msg: "Can't find user id",
+                    token
+                });
+            }
         }
         else {
-            res.status(401).json({ token });
+            res.status(402).json({
+                msg: "Token is unknow",
+                token
+            });
         }
     }
     else {
-        res.status(401).json({ token });
+        res.status(402).json({
+            msg: "Can't find token",
+            token
+        });
     }
 }));
 exports.default = router;

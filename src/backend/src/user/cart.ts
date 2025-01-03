@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import express from 'express';
 import { cartList } from '../interface';
-import { error } from 'console';
 
 const router = express();
 const prisma = new PrismaClient;
@@ -21,15 +20,19 @@ async function getAllCartList(userid:number) {
         }
     })
 
-    return cartList?.CartDetail.map(e => {
-        return {
-            foodId: e.Food.food_id,
-            foodName: e.Food.food_name,
-            foodImg: e.Food.food_img,
-            foodPrice: e.Food.food_price,
-            quantity: e.quantity
-        }
-    })
+    if (cartList) {
+        return cartList?.CartDetail.map(e => {
+            return {
+                foodId: e.Food.food_id,
+                foodName: e.Food.food_name,
+                foodImg: e.Food.food_img,
+                foodPrice: e.Food.food_price,
+                quantity: e.quantity
+            }
+        });
+    } else {
+        return [];
+    }
 }
 
 router.get('/:userId', async(req, res) => {
@@ -84,7 +87,7 @@ router.post('/:userId', async(req, res) => {
                         }
                     },
                     data: {
-                        quantity: Number(data[0].quantity) + 1
+                        quantity: Number(data[0].quantity) + quantity
                     }
                 })
             } else {
@@ -170,6 +173,7 @@ router.put('/:userId', async(req, res) => {
                     quantity: Number(quantity)
                 }
             })
+
             if (updatedData) {
                 res.json(await getAllCartList(Number(userId)));
             } else {
@@ -196,7 +200,7 @@ router.delete('/:userId', async(req, res) => {
     const { foodId } = req.body;
     const { userId } = req.params;
 
-    if (!(foodId && userId)) {
+    if (!foodId && !userId) {
         res.status(400).json({
             msg: "Missing Data"
         })

@@ -9,7 +9,7 @@ import { useRef, useState, MouseEvent, WheelEvent } from "react";
 import { TableOption } from "./Popup";
 
 interface ReservationDetail {
-    cusName: string,
+    customerName: string,
     foodList: {
         name: string,
         price: number | string,

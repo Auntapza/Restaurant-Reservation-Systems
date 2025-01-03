@@ -1,36 +1,58 @@
+interface TableApi {
+    tableId: string,
+    status: number
+}
+
+const socket = io("http://localhost:4000");
+
 export default function TableSelect({ tableVal, selectFunction } : {
     selectFunction: Function,
     tableVal?: string
 }) {
 
+    const [dep, setDep] = useState(0)
+
+    const { data, loader } = useFetchData<TableApi[]>({
+        url: 'http://localhost:4000/table',
+        dependencies: [dep]
+    })
+
+    useEffect(() => {
+        socket.on("update table", () => {
+            setDep((prv) => (prv+1))
+        })
+    }, [])
+
     return (
         <>
             <div className="grid grid-rows-2 grid-cols-3 w-full justify-items-center">
-                <Table selected={tableVal == 'A01'} onClick={(e) => {selectFunction("A01", e)}}/> 
-                <Table selected={tableVal == 'A02'} onClick={(e) => {selectFunction("A02", e)}} state={1}/> 
-                <Table selected={tableVal == 'A03'} onClick={(e) => {selectFunction("A03", e)}}/> 
-                <Table selected={tableVal == 'A04'} onClick={(e) => {selectFunction("A04", e)}}/> 
-                <Table selected={tableVal == 'A05'} onClick={(e) => {selectFunction("A05", e)}} state={2}/> 
-                <Table selected={tableVal == 'A06'} onClick={(e) => {selectFunction("A06", e)}}/> 
+                <Loading fallback={<p className='text-2xl font-bold'>Loadding...</p>} loadding={loader}>
+                    {data?.map((e, index) => {
+                        return (
+                            <Table key={index} selected={tableVal == e.tableId}
+                                onClick={(ev) => {selectFunction(e.tableId, ev)}}
+                                state={e.status}/>
+                        )
+                    })}
+                </Loading>
             </div>  
         </>
     )
 }
 
-enum State {
-    idle = 0,
-    busy = 1,
-    ordered = 2,
-}
-
+import api from '@/function/api';
+import useFetchData from '@/hooks/useFetch';
 import correct from '@/img/correct.png'
+import { TableState, tableStatus } from '@/interface/interface'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { MouseEventHandler, MouseEvent } from 'react'
+import { MouseEventHandler, MouseEvent, useEffect, useState } from 'react'
+import { io } from 'socket.io-client'
+import Loading from './Load';
 
 function Table( {onClick, state, selected} : {
     onClick: MouseEventHandler,
-    state?: State | 0,
+    state?: TableState | number,
     selected?: boolean
 } ) {
 

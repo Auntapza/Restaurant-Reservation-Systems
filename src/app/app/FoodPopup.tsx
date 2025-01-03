@@ -7,6 +7,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Button from '@/component/Button'
 import { foodData } from '@/interface/interface'
+import cart from '@/function/cart'
 
 export default function Foodpopup({isOn, state, data}: {
     isOn: boolean,
@@ -30,6 +31,7 @@ export default function Foodpopup({isOn, state, data}: {
 
     // add to cart function
     function addtoCart(foodid: number) {
+        cart.add(foodid, foodCount);
         router.push('app/cart');
     }
 
@@ -54,13 +56,13 @@ export default function Foodpopup({isOn, state, data}: {
                     <div className='mt-8 border-t-2 pt-5 border-orange-500 select-none'>
                         <div className='flex gap-x-5 items-center justify-evenly px-14 mb-5'>
                             <div onClick={() => {handleFoodCountControl("-")}} className='hover:text-orange-500 transition cursor-pointer rounded-full p-2 px-7 pb-4 text-6xl shadow border'>
-                                <span>-</span>
+                                <span className='select-none'>-</span>
                             </div>
                             <input className='text-4xl text-center outline-none w-20' onChange={(e) => {
                                 setFoodCount(Number(e.target.value))
                             }} value={foodCount} type='number' min={1} max={10}/>
                             <div onClick={() => {handleFoodCountControl("+")}} className='hover:text-orange-500 transition cursor-pointer rounded-full p-2 px-5 pb-4 text-6xl shadow border'>
-                                <span>+</span>
+                                <span className='select-none'>+</span>
                             </div>
                         </div>
                         <Button onClick={() => {addtoCart(data.foodId)}} className='block mx-auto p-3 px-10 text-3xl'>Add to cart</Button>
