@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
+const crypto_1 = __importDefault(require("crypto"));
 const express_1 = __importDefault(require("express"));
 const router = (0, express_1.default)();
 const prisma = new client_1.PrismaClient();
@@ -27,6 +28,9 @@ router.get('/:userId', (req, res) => __awaiter(void 0, void 0, void 0, function*
     const data = yield prisma.account.findUnique({
         where: {
             acc_id: Number(userId)
+        },
+        include: {
+            Username: true
         }
     });
     res.status(200).json(data);
@@ -34,6 +38,7 @@ router.get('/:userId', (req, res) => __awaiter(void 0, void 0, void 0, function*
 // insert new worker Data
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password, fname, lname, role } = req.body;
+    const hashPassword = crypto_1.default.createHash('sha256').update(password).digest('hex');
     const createdData = yield prisma.account.create({
         data: {
             acc_fname: fname,
@@ -42,7 +47,7 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             Username: {
                 create: {
                     username,
-                    password
+                    password: hashPassword
                 }
             }
         },
@@ -57,19 +62,13 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 }));
 // update worker data
 router.put('/:userId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { username, password, fname, lname, role } = req.body;
+    const { fname, lname, role } = req.body;
     const { userId } = req.params;
     const updatedData = yield prisma.account.update({
         where: {
             acc_id: Number(userId)
         },
         data: {
-            Username: {
-                update: {
-                    username,
-                    password
-                }
-            },
             acc_fname: fname,
             acc_lname: lname,
             role

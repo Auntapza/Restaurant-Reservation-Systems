@@ -44,12 +44,13 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const token = (0, token_1.createToken)(payload);
         res.cookie('token', token, { httpOnly: true });
         res.status(200).json({
-            msg: 'Login successfully'
+            msg: 'Login successfully',
+            role: data.Account.role
         });
     }
     else {
         res.status(402).json({
-            msg: 'username or password incorect'
+            msg: 'username or password incorect',
         });
     }
 }));

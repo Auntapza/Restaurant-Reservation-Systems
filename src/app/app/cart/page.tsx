@@ -17,22 +17,16 @@ export default function Cart() {
     async function getCartData() {
         const data = await cart.get();
         setCart(cart.cartList);
-
-        let sum = 0
-        if (data.length > 0) {
-            data.map(e => {
-                sum += (e.foodPrice * e.quantity);
-                setTotalPrice(sum);
-            })
-        } else {
-            setTotalPrice(sum);
-        }
         return data
     }
 
     useEffect(() => {
         getCartData();
-    }, [0])
+    }, [])
+
+    useEffect(() => {
+        setTotalPrice(cart.calculateTotal())
+    }, [cartItem])
 
     async function editQuantity(o:string, quantity:number, foodId:number) {
         if ((!(quantity == 1) && o === '-') || ((o === '+') && (quantity < 10))) {

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import Crypto from 'crypto'
 import express from 'express';
 
 const router = express();
@@ -23,6 +24,9 @@ router.get('/:userId', async(req, res) => {
     const data = await prisma.account.findUnique({
         where: {
             acc_id: Number(userId)
+        },
+        include: {
+            Username: true
         }
     })
 
@@ -34,6 +38,9 @@ router.get('/:userId', async(req, res) => {
 router.post('/', async(req, res) => {
 
     const { username, password, fname, lname, role } = req.body;
+    
+    const hashPassword = Crypto.createHash('sha256').update(password).digest('hex')
+    
 
     const createdData = await prisma.account.create({
         data: {
@@ -43,7 +50,7 @@ router.post('/', async(req, res) => {
             Username: {
                 create: {
                     username,
-                    password
+                    password: hashPassword
                 }
             }
         },
@@ -62,7 +69,7 @@ router.post('/', async(req, res) => {
 // update worker data
 router.put('/:userId', async(req, res) => {
     
-    const { username, password, fname, lname, role } = req.body;
+    const { fname, lname, role } = req.body;
     const { userId } = req.params
 
     const updatedData = await prisma.account.update({
@@ -70,12 +77,6 @@ router.put('/:userId', async(req, res) => {
             acc_id: Number(userId)
         },
         data: {
-            Username: {
-                update: {
-                    username,
-                    password
-                }
-            },
             acc_fname: fname,
             acc_lname: lname,
             role

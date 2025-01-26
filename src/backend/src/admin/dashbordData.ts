@@ -49,6 +49,7 @@ router.get('/', async(req, res) => {
 
         const day = start.setDate(start.getDate() + 1);
         const currentDay = new Date(day);
+        console.log(currentDay);
         const end = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate(), 23, 59, 59);
         let sum = 0
         AllOrder.map(e => {
@@ -58,7 +59,7 @@ router.get('/', async(req, res) => {
         })
 
         orderData = [...orderData, sum];
-        ChartLabel = [...ChartLabel, `${currentDay.getDate()}/${currentDay.getMonth()}/${currentDay.getFullYear()}`]
+        ChartLabel = [...ChartLabel, `${currentDay.getDate()}/${currentDay.getMonth()+1}/${currentDay.getFullYear()}`]
 
     }
     

@@ -239,4 +239,29 @@ router.delete('/:userId', async(req, res) => {
 
 })
 
+// clear cart 
+router.delete('/clear/:userId', async(req, res) => {
+    
+    const { userId } = req.params;
+    
+    try {
+        await prisma.cartDetail.deleteMany({
+            where: {
+                cart: {
+                    acc_id: Number(userId)
+                }
+            }
+        })
+
+        res.json({
+            msg: "delete cart item successfuly"
+        })
+    } catch {
+        res.status(400).json({
+            msg: "Fail to delete cart item"
+        })
+    }
+    
+})
+
 export default router;

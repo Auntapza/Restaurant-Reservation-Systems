@@ -26,22 +26,11 @@ model cart {
   CartDetail cartDetail[]
 }
 
-model cartDetail {
-  cart_id  Int
-  food_id  Int
-  quantity Int
-  cart     cart @relation(fields: [cart_id], references: [cart_id], map: "CartDetail_cart_id_fkey")
-  Food     food @relation(fields: [food_id], references: [food_id], map: "CartDetail_food_id_fkey")
-
-  @@id([cart_id, food_id])
-  @@index([food_id], map: "CartDetail_food_id_fkey")
-}
-
 model category {
   cat_id   Int     @id @default(autoincrement())
   cat_name String
   cat_img  String?
-  food     food[]
+  Food     food[]
 }
 
 model food {
@@ -61,17 +50,16 @@ model food {
 }
 
 model order {
-  order_id     Int                @id @default(autoincrement())
-  order_date   DateTime           @default(now())
+  order_id     Int                  @id @default(autoincrement())
+  order_date   DateTime             @default(now())
   table_id     String
-  recipt_file  String?
   order_status order_order_status
-  acc_id       Int
-  time         DateTime
-  account      account            @relation(fields: [acc_id], references: [acc_id], map: "Order_acc_id_fkey")
-  table        table              @relation(fields: [table_id], references: [table_id], map: "Order_table_id_fkey")
+  acc_id       Int?
+  recipt_img   String?
+  account      account?             @relation(fields: [acc_id], references: [acc_id], onDelete: Restrict, map: "Order_acc_id_fkey")
+  table        table                @relation(fields: [table_id], references: [table_id], map: "Order_table_id_fkey")
   OrderDetail  orderdetail[]
-  payment      payment?
+  payment  reservation_payment?
 
   @@index([acc_id], map: "Order_acc_id_fkey")
   @@index([table_id], map: "Order_table_id_fkey")
@@ -88,12 +76,13 @@ model orderdetail {
   @@index([food_id], map: "OrderDetail_food_id_fkey")
 }
 
-model payment {
+model reservation_payment {
   order_id   Int            @id
-  slip_image String?
+  slip_image String
   pay_time   DateTime
   status     payment_status
   method     payment_method
+  pay_count  Int
   order      order          @relation(fields: [order_id], references: [order_id], map: "Payment_order_id_fkey")
 }
 
@@ -104,7 +93,7 @@ model rating {
   score   Int
   detail  String?
   account account @relation(fields: [acc_id], references: [acc_id], map: "Rating_acc_id_fkey")
-  food    food    @relation(fields: [food_id], references: [food_id], map: "Rating_food_id_fkey")
+  Food    food    @relation(fields: [food_id], references: [food_id], map: "Rating_food_id_fkey")
 
   @@index([acc_id], map: "Rating_acc_id_fkey")
   @@index([food_id], map: "Rating_food_id_fkey")
@@ -112,7 +101,6 @@ model rating {
 
 model table {
   table_id     String             @id
-  table_status table_table_status
   order        order[]
 }
 
@@ -123,10 +111,15 @@ model username {
   Account  account @relation(fields: [acc_id], references: [acc_id], map: "Username_acc_id_fkey")
 }
 
-enum table_table_status {
-  idle
-  busy
-  ordered
+model cartDetail {
+  cart_id  Int
+  food_id  Int
+  quantity Int
+  cart     cart @relation(fields: [cart_id], references: [cart_id], map: "CartDetail_cart_id_fkey")
+  Food     food @relation(fields: [food_id], references: [food_id], map: "CartDetail_food_id_fkey")
+
+  @@id([cart_id, food_id])
+  @@index([food_id], map: "CartDetail_food_id_fkey")
 }
 
 enum payment_status {

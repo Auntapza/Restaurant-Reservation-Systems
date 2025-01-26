@@ -25,7 +25,7 @@ function Login() {
           username,password
         })
   
-        await toast.promise(request, {
+        const data = await toast.promise(request, {
           success: "Login Successfuly",
           error: (err) => {
             return err.message
@@ -33,7 +33,11 @@ function Login() {
           loading: "Logging in"
         })
 
-        router.push('/app');
+        if (data.role == "customer") {
+          router.push('/app');
+        } else {
+          router.push(`/${data.role}`)
+        }
         
       } catch(err) {
         console.log(err);

@@ -6,22 +6,41 @@ const prisma = new PrismaClient
 
 router.get('/', async(req, res) => {
     
-    const tableStatus = await prisma.table.findMany();
-
-    const convertToNumber = (text:string) => {
-        if (text === 'busy') {
-            return 1;
-        } else if (text === 'ordered') {
-            return 2;
-        } else if (text === "idle") {
-            return 0;
+    const tableStatus = await prisma.table.findMany({
+        include: {
+            order: {
+                orderBy: {
+                    order_date: 'desc'
+                }
+            }
         }
-    }
+    });
 
-    res.json(tableStatus.map(e => ({
-        tableId: e.table_id,
-        status: convertToNumber(e.table_status)
-    })))
+    const data = tableStatus.map((e) => {
+        if (e.order.length > 0) {
+            const order = e.order[0];
+            let status = 0;
+            if (order.order_status == "ordering") {
+                status = 2;
+            } else if (order.order_status == "pending") {
+                status = 1;
+            } else if (order.order_status == "complete") {
+                status = 0
+            }
+            
+            return {
+                tableId: e.table_id,
+                status: status
+            }
+        } else {
+            return {
+                tableId: e.table_id,
+                status: 0
+            }
+        }
+    })
+
+    res.json(data)
 
 })
 

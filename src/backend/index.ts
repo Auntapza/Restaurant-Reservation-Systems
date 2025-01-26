@@ -6,17 +6,18 @@ import cors from 'cors'
 
 import getFood from './src/user/getFood';
 import adminApi from './src/admin/center'
-import { PrismaClient, table_table_status } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import imageShow from './src/img/center'
-import testImage from './socket/socket'
 import auth from './src/auth/center'
 import table from './src/table/table'
 import cart from './src/user/cart'
+import order from './src/order/order'
+import axios from 'axios';
 
 const app = express();
 app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true
+    credentials: true,
+    origin: true
 }));
 app.use(express.json({
     limit: "50mb"
@@ -25,7 +26,7 @@ app.use(express.json({
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: true,
     }
 });
 
@@ -38,30 +39,21 @@ app.use('/image', imageShow);
 app.use('/', auth);
 app.use('/cart', cart);
 app.use('/table', table);
+app.use('/order', order)
 // app.use('/', testImage)
 
 io.on('connection', (socket) => {
-    console.log("User connected");
 
-    socket.on('table update', async(tableId:string, tableStatus:table_table_status) => {
-        if (tableId && tableStatus) {
-            prisma.table.update({
-                where: {
-                    table_id: tableId
-                },
-                data: {
-                    table_status: tableStatus
-                }
-            })
-            const tableData = await prisma.table.findMany();
+    socket.on("test", (msg) => {
+        io.emit('test', msg)
+    })
 
-            
-            socket.emit("table update", tableData.map(e => ({
-                tableId: e.table_id,
-                status: e.table_status
-            })))
+    socket.on('table update', async() => {
+        const res = await axios.get("http://localhost:4000/table")
+        const data = res.data
+        
+        io.emit('table update', data)
 
-        }
     })
 })
 

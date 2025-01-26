@@ -1,22 +1,18 @@
 'use client'
 
 import Button from "@/component/Button";
+import { useOrder } from "@/hooks/order";
 import promptpay from "@/img/payment/PromptpayLogo.png";
-import wallet from "@/img/payment/truewalletLogo.png";
 import Image, { StaticImageData } from "next/image";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 export default function Payment() {
 
     const router = useRouter();
+    const { order, } = useOrder();
 
     const payment = [
-        {
-            text: 'True money wallet',
-            image: wallet,
-            value: 'wallet'
-        },
         {
             text: 'Promptpay',
             image: promptpay,
@@ -25,6 +21,12 @@ export default function Payment() {
     ]
 
     const [paymentMethod, setPaymentMethod] = useState('');
+
+    useEffect(() => {
+        if (order.tableId == "A0") {
+            router.replace('summery')
+        }
+    }, [])
     
     return (
         <>
@@ -45,7 +47,6 @@ export default function Payment() {
             <div className="container flex justify-between items-center">
                 <div></div>
                 <div className="flex items-center gap-7">
-                    <p className="text-4xl font-bold">2500฿</p>
                     <Button className="py-4 px-8 2xl:text-3xl xl:text-2xl disabled:bg-orange-300
                     transition" disabled={paymentMethod == ''}
                     onClick={() => {router.push('payment/process?p='+paymentMethod)}}>Purchase Order</Button>

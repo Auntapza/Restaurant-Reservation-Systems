@@ -24,10 +24,12 @@ const center_2 = __importDefault(require("./src/img/center"));
 const center_3 = __importDefault(require("./src/auth/center"));
 const table_1 = __importDefault(require("./src/table/table"));
 const cart_1 = __importDefault(require("./src/user/cart"));
+const order_1 = __importDefault(require("./src/order/order"));
+const axios_1 = __importDefault(require("axios"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: 'http://localhost:3000',
-    credentials: true
+    credentials: true,
+    origin: true
 }));
 app.use(express_1.default.json({
     limit: "50mb"
@@ -35,7 +37,7 @@ app.use(express_1.default.json({
 const server = (0, http_1.createServer)(app);
 const io = new socket_io_1.Server(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: true,
     }
 });
 const prisma = new client_1.PrismaClient;
@@ -46,25 +48,16 @@ app.use('/image', center_2.default);
 app.use('/', center_3.default);
 app.use('/cart', cart_1.default);
 app.use('/table', table_1.default);
+app.use('/order', order_1.default);
 // app.use('/', testImage)
 io.on('connection', (socket) => {
-    console.log("User connected");
-    socket.on('table update', (tableId, tableStatus) => __awaiter(void 0, void 0, void 0, function* () {
-        if (tableId && tableStatus) {
-            prisma.table.update({
-                where: {
-                    table_id: tableId
-                },
-                data: {
-                    table_status: tableStatus
-                }
-            });
-            const tableData = yield prisma.table.findMany();
-            socket.emit("table update", tableData.map(e => ({
-                tableId: e.table_id,
-                status: e.table_status
-            })));
-        }
+    socket.on("test", (msg) => {
+        io.emit('test', msg);
+    });
+    socket.on('table update', () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield axios_1.default.get("http://localhost:4000/table");
+        const data = res.data;
+        io.emit('table update', data);
     }));
 });
 server.listen(4000, () => {

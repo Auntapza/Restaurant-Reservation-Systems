@@ -17,21 +17,40 @@ const express_1 = __importDefault(require("express"));
 const router = (0, express_1.default)();
 const prisma = new client_1.PrismaClient;
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const tableStatus = yield prisma.table.findMany();
-    const convertToNumber = (text) => {
-        if (text === 'busy') {
-            return 1;
+    const tableStatus = yield prisma.table.findMany({
+        include: {
+            order: {
+                orderBy: {
+                    order_date: 'desc'
+                }
+            }
         }
-        else if (text === 'ordered') {
-            return 2;
+    });
+    const data = tableStatus.map((e) => {
+        if (e.order.length > 0) {
+            const order = e.order[0];
+            let status = 0;
+            if (order.order_status == "ordering") {
+                status = 2;
+            }
+            else if (order.order_status == "pending") {
+                status = 1;
+            }
+            else if (order.order_status == "complete") {
+                status = 0;
+            }
+            return {
+                tableId: e.table_id,
+                status: status
+            };
         }
-        else if (text === "idle") {
-            return 0;
+        else {
+            return {
+                tableId: e.table_id,
+                status: 0
+            };
         }
-    };
-    res.json(tableStatus.map(e => ({
-        tableId: e.table_id,
-        status: convertToNumber(e.table_status)
-    })));
+    });
+    res.json(data);
 }));
 exports.default = router;

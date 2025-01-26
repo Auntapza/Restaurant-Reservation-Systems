@@ -38,14 +38,15 @@ router.post('/', async(req, res) => {
         const token = createToken(payload);
         res.cookie('token', token, {httpOnly: true});
         res.status(200).json({
-            msg: 'Login successfully'
+            msg: 'Login successfully',
+            role: data.Account.role
         });
     } else {
         res.status(402).json({
-            msg: 'username or password incorect'
+            msg: 'username or password incorect',
         });
     }
 
 })
 
-export default router;
+export default router

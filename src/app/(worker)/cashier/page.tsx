@@ -5,17 +5,22 @@ import User from "@/img/user";
 import Image from "next/image";
 
 import dummyImage from '@/img/homepage/dummyPopfood.png'
-import { useRef, useState, MouseEvent, WheelEvent } from "react";
+import { useRef, useState, MouseEvent, WheelEvent, useEffect } from "react";
 import { TableOption } from "./Popup";
+import { io } from "socket.io-client";
+import api from "@/function/api";
 
 interface ReservationDetail {
     customerName: string,
     foodList: {
-        name: string,
-        price: number | string,
+        foodName: string,
+        foodPrice: number | string,
+        foodImg?: string
     }[],
     totalPrice: number | string
 }
+
+const socket = io('http://localhost:4000');
 
 export default function Main() {
     
@@ -26,6 +31,7 @@ export default function Main() {
         x: 0,
         y: 0
     });
+    const [reservationData, setReservationData] = useState<ReservationDetail[]>([])
 
     const handleScroll = (e: WheelEvent<HTMLDivElement>) => {
         
@@ -52,6 +58,22 @@ export default function Main() {
             y: Number(0)
         })
     }
+    
+    async function getReservationData() {
+        const data = await api.get("http://localhost:4000/order/reservation");
+        setReservationData(data);
+    }
+
+    useEffect(() => {
+        socket.on("table update", () => {
+            setTableOptionShow(false)
+            getReservationData()
+        })
+    }, [socket])
+
+    useEffect(() => {
+        getReservationData()
+    }, [])
 
     return (
         <>
@@ -67,7 +89,7 @@ export default function Main() {
                     <p className="text-3xl mb-3">Reservation List</p>
                     <div onWheel={handleScroll} ref={scrollContainerRef}
                     className="flex gap-5 transition overflow-x-auto p-3">
-                        {Array.from({length: 10}).map((e, index) => (<OrderList key={index}/>))}
+                        {reservationData.map((e, index) => (<OrderList data={e} key={index}/>))}
                     </div>
                 </div>
             </div>
@@ -75,15 +97,21 @@ export default function Main() {
     )
 }
 
-const OrderList = () => {
+const OrderList = ({data} : { data: ReservationDetail }) => {
 
-    const FoodList = () => {
+    const FoodList = ({food} : { 
+        food: {
+            foodName: string,
+            foodPrice: number | string,
+            foodImg?: string
+        }
+    }) => {
         return (
             <>
                 <div className="mt-2 flex gap-5 items-center">
-                    <Image src={dummyImage} alt="" className="w-14 rounded-md"/>
-                    <p className="text-xl">Food name</p>
-                    <p>Price : 50฿</p>
+                    <Image src={food.foodImg ? food.foodImg : dummyImage} width={100} height={100} alt="" className="w-14 rounded-md"/>
+                    <p className="text-xl">{food.foodName}</p>
+                    <p>Price : {food.foodPrice}฿</p>
                 </div>
             </>
         )
@@ -94,12 +122,12 @@ const OrderList = () => {
             <div className="p-3 shadow-[5px_10px_1px_1px_#000] rounded min-w-max cursor-pointer">
                 <div className="flex items-center gap-3">
                     <User/>
-                    <p className="text-3xl">Username</p>
+                    <p className="text-3xl">{data.customerName}</p>
                 </div>
                 <div className="mt-2 text-xl">
                     <h1 className="text-2xl">Order List</h1>
-                    {Array.from({length: 4}).map((e, index) => (<FoodList key={index}/>))}
-                    <p className="mt-5 text-3xl">Total Price : 1000฿</p>
+                    {data.foodList.map((e, index) => (<FoodList food={e} key={index}/>))}
+                    <p className="mt-5 text-3xl">Total Price : {data.totalPrice}฿</p>
                 </div>
             </div>
         </>

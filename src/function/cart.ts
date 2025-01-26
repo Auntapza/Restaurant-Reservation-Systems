@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 class Cart {
     
     cartList:cartData[] = [];
-    private userId: number = 0;
+    userId: number = 0;
 
     constructor() {
         try {
@@ -48,6 +48,16 @@ class Cart {
         }).then(() => {
             this.get();
         })
+    }
+
+    async removeAll() {
+        api.delete('http://localhost:4000/cart/clear/'+this.userId).then(() => {
+            this.get();
+        })
+    }
+
+    calculateTotal() {
+        return this.cartList.reduce((total, food) => total + food.foodPrice * food.quantity, 0);
     }
 
 }

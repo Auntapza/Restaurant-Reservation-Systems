@@ -56,6 +56,7 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     for (let i = 0; i < 7; i++) {
         const day = start.setDate(start.getDate() + 1);
         const currentDay = new Date(day);
+        console.log(currentDay);
         const end = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate(), 23, 59, 59);
         let sum = 0;
         AllOrder.map(e => {
@@ -64,7 +65,7 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             }
         });
         orderData = [...orderData, sum];
-        ChartLabel = [...ChartLabel, `${currentDay.getDate()}/${currentDay.getMonth()}/${currentDay.getFullYear()}`];
+        ChartLabel = [...ChartLabel, `${currentDay.getDate()}/${currentDay.getMonth() + 1}/${currentDay.getFullYear()}`];
     }
     // Revenu Data for showing chart && today revenu
     // todayRevenu Code

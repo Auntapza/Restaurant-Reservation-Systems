@@ -17,9 +17,11 @@ export default function TableSelect({ tableVal, selectFunction } : {
         dependencies: [dep]
     })
 
+    console.log(data);
+
     useEffect(() => {
-        socket.on("update table", () => {
-            setDep((prv) => (prv+1))
+        socket.on("table update", (res) => {
+            setDep((prv) => (prv+1));
         })
     }, [])
 
@@ -40,7 +42,6 @@ export default function TableSelect({ tableVal, selectFunction } : {
     )
 }
 
-import api from '@/function/api';
 import useFetchData from '@/hooks/useFetch';
 import correct from '@/img/correct.png'
 import { TableState, tableStatus } from '@/interface/interface'

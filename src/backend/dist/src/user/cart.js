@@ -229,4 +229,25 @@ router.delete('/:userId', (req, res) => __awaiter(void 0, void 0, void 0, functi
         });
     }
 }));
+// clear cart 
+router.delete('/clear/:userId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.params;
+    try {
+        yield prisma.cartDetail.deleteMany({
+            where: {
+                cart: {
+                    acc_id: Number(userId)
+                }
+            }
+        });
+        res.json({
+            msg: "delete cart item successfuly"
+        });
+    }
+    catch (_a) {
+        res.status(400).json({
+            msg: "Fail to delete cart item"
+        });
+    }
+}));
 exports.default = router;

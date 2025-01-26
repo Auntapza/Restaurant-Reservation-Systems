@@ -42,3 +42,20 @@ export enum TableState {
     "busy",
     "ordered"
 }
+
+export interface foodList {
+    foodId: number,
+    foodName: string,
+    foodPrice: number,
+    foodImg: string,
+    rate_score?: number
+}
+
+export interface orderDetail {
+    orderId?: number,
+    orderTime?: string,
+    orderDate?: string,
+    foodList: foodList[],
+    tableId: string,
+    accId: number
+}

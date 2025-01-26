@@ -3,7 +3,7 @@ export interface foodList {
     foodName: string,
     foodPrice: number,
     foodImg: string,
-    rate_score: number
+    rate_score?: number
 }
 
 export interface tokenPayload {

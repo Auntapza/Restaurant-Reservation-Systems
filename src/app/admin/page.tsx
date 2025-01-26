@@ -25,7 +25,9 @@ interface dashboradData {
 // Mainpage
 export default function Mainpage() {
 
-    const [data, setData] = useState<dashboradData>();
+    const { data, loader } = useFetch<dashboradData>({
+        url: "http://localhost:4000/admin"
+    }) 
 
     const blockData = [
         {
@@ -50,9 +52,7 @@ export default function Mainpage() {
         } 
     ]
 
-    useEffect(() => {
-        fetchData('http://localhost:4000/admin', setData)
-    })
+    console.log(data);
 
     return (
         <>
@@ -119,7 +119,7 @@ function BarChart({label, data}: ChartData) {
                 newChart.destroy()
             }
         }
-    }, [])
+    }, [data, label])
 
 
     return (
@@ -158,7 +158,7 @@ function LineChart({label, data}: ChartData) {
                 newChart.destroy()
             }
         }
-    }, [])
+    }, [data, label])
 
 
     return (

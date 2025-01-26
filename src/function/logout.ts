@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 export default function Logout() {
-    Cookies.remove('token');
-    useRouter().replace('/login');
+    Cookies.remove('token', {path: "/", domain: "localhost"});
+    redirect('/login');
 }

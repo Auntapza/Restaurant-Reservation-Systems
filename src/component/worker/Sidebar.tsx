@@ -4,13 +4,12 @@ import { Home } from "@/img/svg/svg"
 import { WorkerType } from "@/interface/interface"
 import Link from "next/link"
 import { Logout } from "../Menubar"
-import { useRouter } from "next/navigation"
+
+import LogoutFunction from "@/function/logout"
 
 export default function Sidebar({type} : {
     type: WorkerType
 }) {
-
-    const router = useRouter();
 
     let SideMenu:{
         icon: JSX.Element,
@@ -26,10 +25,6 @@ export default function Sidebar({type} : {
         ]
     }
 
-    function logout() {
-        router.push('/');
-    }
-
     return (
         <>
             <div className="bg-white h-screen max-w-24 flex flex-col p-5 items-center sticky top-0">
@@ -43,7 +38,7 @@ export default function Sidebar({type} : {
                         ))}
                 </div>
                 <div>
-                    <button onClick={() => {logout}} className="group -translate-x-1 hover:bg-slate-50 p-2 transition rounded">
+                    <button onClick={() => {LogoutFunction()}} className="group -translate-x-1 hover:bg-slate-50 p-2 transition rounded">
                         <Logout />
                     </button>
                 </div>
