@@ -9,6 +9,7 @@ import adminApi from './src/admin/center'
 import { PrismaClient } from '@prisma/client';
 import imageShow from './src/img/center'
 import auth from './src/auth/center'
+import waiter from './src/waiter/center'
 import table from './src/table/table'
 import cart from './src/user/cart'
 import order from './src/order/order'
@@ -42,6 +43,7 @@ app.use('/cart', cart);
 app.use('/table', table);
 app.use('/order', order)
 app.use('/chef', chef)
+app.use('/waiter', waiter)
 // app.use('/', testImage)
 
 io.on('connection', (socket) => {

@@ -22,6 +22,7 @@ const center_1 = __importDefault(require("./src/admin/center"));
 const client_1 = require("@prisma/client");
 const center_2 = __importDefault(require("./src/img/center"));
 const center_3 = __importDefault(require("./src/auth/center"));
+const center_4 = __importDefault(require("./src/waiter/center"));
 const table_1 = __importDefault(require("./src/table/table"));
 const cart_1 = __importDefault(require("./src/user/cart"));
 const order_1 = __importDefault(require("./src/order/order"));
@@ -51,6 +52,7 @@ app.use('/cart', cart_1.default);
 app.use('/table', table_1.default);
 app.use('/order', order_1.default);
 app.use('/chef', chef_1.default);
+app.use('/waiter', center_4.default);
 // app.use('/', testImage)
 io.on('connection', (socket) => {
     socket.on("test", (msg) => {

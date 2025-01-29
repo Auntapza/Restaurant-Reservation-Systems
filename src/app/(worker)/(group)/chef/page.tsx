@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 interface MenuList {
     order_id: string | number,
     table: string,
+    time: string
     foodList: {
         foodId: string | number,
         foodImgUrl?: string
@@ -91,6 +92,7 @@ const MenuList = ({data, state} : {data: MenuList, state: Dispatch<SetStateActio
             <div className="bg-slate-100 rounded p-5 shadow h-full min-w-max">
                 <h1 className="text-3xl font-bold">Order : {data.order_id}</h1>
                 <h1 className="text-3xl font-bold">Table : {data.table}</h1>
+                <h1 className="text-xl mt-5">Service time : {new Date(data.time).toString().split(' ')[4].slice(0, 5)}</h1>
                 <div className="mt-5">
                     <table className="rounded-lg overflow-hidden border border-black">
                         <thead className="text-xl bg-orange-200">

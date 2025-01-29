@@ -51,8 +51,10 @@ router.get("/", async(req, res) => {
             const now = new Date();
             const orderTime = new Date(e.service_time).getTime();
             return (eval(`${orderTime} - ${now.getTime()}`) <= 1800000)
-        } else {
+        } else if (e.order_status == "pending") {
             return true;
+        } else {
+            return false
         }
 
     })
@@ -61,6 +63,7 @@ router.get("/", async(req, res) => {
         return {
             order_id: e.order_id,
             table: e.table_id,
+            time: e.service_time,
             status: e.order_status,
             foodList: e.OrderDetail.map(e => ({
                 foodId: e.Food.food_id,
@@ -89,7 +92,7 @@ router.put('/:orderId', async(req, res) => {
                         order_id: Number(orderId)
                     },
                     data: {
-                        complete: 'complete'
+                        complete: 'waitServe'
                     }
                 }
             },
