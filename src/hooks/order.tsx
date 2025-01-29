@@ -1,7 +1,7 @@
 'use client'
 
 import { orderDetail } from "@/interface/interface";
-import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
+import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useState } from "react";
 
 const defaultOrder: orderDetail = {
     orderTime: '',

@@ -52,8 +52,10 @@ model food {
 model order {
   order_id     Int                  @id @default(autoincrement())
   order_date   DateTime             @default(now())
+  service_time   DateTime             @default(now())
   table_id     String
   order_status order_order_status
+  modifyTime    DateTime       @default(now())
   acc_id       Int?
   recipt_img   String?
   account      account?             @relation(fields: [acc_id], references: [acc_id], onDelete: Restrict, map: "Order_acc_id_fkey")
@@ -69,6 +71,7 @@ model orderdetail {
   order_id Int
   food_id  Int
   quantity Int
+  complete ChefComplete  @default(none)
   Food     food  @relation(fields: [food_id], references: [food_id], map: "OrderDetail_food_id_fkey")
   Order    order @relation(fields: [order_id], references: [order_id], map: "OrderDetail_order_id_fkey")
 
@@ -120,6 +123,11 @@ model cartDetail {
 
   @@id([cart_id, food_id])
   @@index([food_id], map: "CartDetail_food_id_fkey")
+}
+
+enum ChefComplete {
+  complete
+  none
 }
 
 enum payment_status {

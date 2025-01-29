@@ -47,7 +47,7 @@ export async function middleware(request: NextRequest) {
 
             const payload = await getPayload(request)
 
-            if (payload.Role !== 'customer') {
+            if (payload.Role !== 'chef') {
                 return NextResponse.redirect(new URL('/login', request.url))            
             }
             
@@ -60,7 +60,7 @@ export async function middleware(request: NextRequest) {
 
             const payload = await getPayload(request)
 
-            if (payload.Role !== 'customer') {
+            if (payload.Role !== 'waiter') {
                 return NextResponse.redirect(new URL('/login', request.url))            
             }
             

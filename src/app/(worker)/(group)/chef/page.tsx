@@ -1,10 +1,14 @@
 'use client'
 
+import socket from "@/backend/lib/socket";
 import Block from "@/component/Block";
 import Button from "@/component/Button";
+import api from "@/function/api";
+import useFetchData from "@/hooks/useFetch";
 import dummyImage from "@/img/homepage/dummyPopfood.png"
 import Image from "next/image";
-import { useRef, useState, WheelEvent } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState, WheelEvent } from "react";
+import toast from "react-hot-toast";
 
 interface MenuList {
     order_id: string | number,
@@ -17,60 +21,27 @@ interface MenuList {
     }[]
 }
 
-// dummydata
-const data: MenuList[] = [
-    {
-        order_id: "ORD001",
-        table: "A1",
-        foodList: [
-            { foodId: "F001", foodName: "Pasta Carbonara", foodQuantity: 2 },
-            { foodId: "F002", foodName: "Caesar Salad", foodQuantity: 1 },
-        ]
-    },
-    {
-        order_id: "ORD002",
-        table: "A3",
-        foodList: [
-            { foodId: "F003", foodName: "Margherita Pizza", foodQuantity: 1 },
-            { foodId: "F004", foodName: "Garlic Bread", foodQuantity: 3 },
-        ]
-    },
-    {
-        order_id: "ORD003",
-        table: "A2",
-        foodList: [
-            { foodId: "F005", foodName: "Grilled Chicken", foodQuantity: 2 },
-            { foodId: "F006", foodName: "French Fries", foodQuantity: 1 },
-        ]
-    },
-    {
-        order_id: "ORD004",
-        table: "A4",
-        foodList: [
-            { foodId: "F007", foodName: "Tiramisu", foodQuantity: 2 },
-            { foodId: "F008", foodName: "Espresso", foodQuantity: 1 },
-        ]
-    },
-    {
-        order_id: "ORD005",
-        table: "A5",
-        foodList: [
-            { foodId: "F009", foodName: "Cheeseburger", foodQuantity: 3 },
-            { foodId: "F010", foodName: "Lemonade", foodQuantity: 2 },
-        ]
-    }
-];
-
-
 export default function Main() {
 
     const Scrollbox = useRef<HTMLDivElement>(null);
+    const [dep, setDep] = useState<number>(0);
 
     function scroll(e: WheelEvent<HTMLDivElement>) {
         if (Scrollbox.current) {
             Scrollbox.current.scrollLeft += e.deltaY
         }
     }
+
+    const { data, loader } = useFetchData<MenuList[]>({
+        url: "http://localhost:4000/chef",
+        dependencies: [dep]
+    })
+
+    useEffect(() => {
+        socket.on("order update", () => {
+            setDep((prv) => prv + 1);
+        })
+    }, [])
     
     return (
         <>
@@ -78,7 +49,9 @@ export default function Main() {
                 <h1 className="text-4xl self-start">Chef menu</h1>
                 <div className="grid h-full">
                     <div className="flex gap-x-5 h-full overflow-x-auto" onWheel={scroll} ref={Scrollbox}>
-                        {data.map((e, index) => (<MenuList data={e} key={index}/>))}
+                        {data == undefined || data.length < 1 ? 
+                        (<p className="text-center text-3xl mt-6 w-full text-slate-300">Not Found Task</p>):
+                        data?.map((e, index) => (<MenuList data={e} state={setDep} key={index}/>))}
                     </div>
                 </div>
             </Block>
@@ -86,7 +59,7 @@ export default function Main() {
     )
 };
 
-const MenuList = ({data} : {data: MenuList}) => {
+const MenuList = ({data, state} : {data: MenuList, state: Dispatch<SetStateAction<number>>}) => {
 
     const count = data.foodList.length;
     const [checkState, setCheckState] = useState<boolean[]>(
@@ -97,6 +70,18 @@ const MenuList = ({data} : {data: MenuList}) => {
         const updateState = [...checkState];
         updateState[index] = !updateState[index];
         setCheckState(updateState);
+    }
+
+    function sendComplete(orderId: number | string) {
+        const res = api.put("http://localhost:4000/chef/"+String(orderId), {});
+        toast.promise(res, {
+            loading: "Loadding....",
+            success: (res) => {
+                state((prv) => prv + 1)
+                return res.msg
+            },
+            error: (err) => err.message
+        })
     }
 
     const isCheck = checkState.every(Boolean);
@@ -133,7 +118,7 @@ const MenuList = ({data} : {data: MenuList}) => {
                             })}
                         </tbody>
                     </table>
-                    <Button className="mt-5 ms-auto block" disabled={!isCheck}>Complete</Button>
+                    <Button className="mt-5 ms-auto block" disabled={!isCheck} onClick={() => {sendComplete(data.order_id)}}>Complete</Button>
                 </div>
             </div>
         </>

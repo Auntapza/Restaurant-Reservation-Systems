@@ -24,7 +24,7 @@ export default function RootLayout({ children } :{
 }) {
 
   return (
-    <html lang="en">
+    <html lang="en"> 
       <head>
         <link
           rel="icon"
@@ -32,6 +32,7 @@ export default function RootLayout({ children } :{
           type="image/<generated>"
           sizes="<generated>"
         />
+        {/* <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script> */}
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen overflow-x-hidden`}

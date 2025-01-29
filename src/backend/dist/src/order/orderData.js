@@ -70,4 +70,20 @@ router.get('/reservation', (req, res) => __awaiter(void 0, void 0, void 0, funct
         });
     }
 }));
+router.get('/:orderid', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { orderid } = req.params;
+    const orderData = yield prisma.order.findUnique({
+        where: {
+            order_id: Number(orderid)
+        },
+        include: {
+            OrderDetail: {
+                include: {
+                    Food: true
+                }
+            },
+        }
+    });
+    res.json(orderData);
+}));
 exports.default = router;

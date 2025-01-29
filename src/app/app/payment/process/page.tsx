@@ -46,7 +46,8 @@ export default function PayProcess() {
                 method: "promptpay"
             },
             tableId: order.tableId,
-            foodList: order.foodList
+            foodList: order.foodList,
+            time: order.orderTime
         })
 
         const data = await toast.promise(sendOrderRes, {
@@ -57,11 +58,11 @@ export default function PayProcess() {
             }
         })
 
-        if (data.success == true) {
+        if (data.slipData.success == true) {
             await cart.removeAll();
             socket.emit("table update");
             clear();
-            router.push("/app");
+            router.push("/app/recipt/"+data.order.order_id);
         }
 
     }

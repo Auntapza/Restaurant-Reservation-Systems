@@ -13,6 +13,7 @@ import table from './src/table/table'
 import cart from './src/user/cart'
 import order from './src/order/order'
 import axios from 'axios';
+import chef from './src/chef/chef'
 
 const app = express();
 app.use(cors({
@@ -40,6 +41,7 @@ app.use('/', auth);
 app.use('/cart', cart);
 app.use('/table', table);
 app.use('/order', order)
+app.use('/chef', chef)
 // app.use('/', testImage)
 
 io.on('connection', (socket) => {
@@ -55,6 +57,14 @@ io.on('connection', (socket) => {
         io.emit('table update', data)
 
     })
+
+    socket.on("order update", async() => {
+        const res = await axios.get("http://localhost:4000/chef")
+        const data = res.data
+        
+        io.emit('order update', data)
+    })
+
 })
 
 server.listen(4000, () => {

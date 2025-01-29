@@ -26,6 +26,7 @@ const table_1 = __importDefault(require("./src/table/table"));
 const cart_1 = __importDefault(require("./src/user/cart"));
 const order_1 = __importDefault(require("./src/order/order"));
 const axios_1 = __importDefault(require("axios"));
+const chef_1 = __importDefault(require("./src/chef/chef"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
     credentials: true,
@@ -49,6 +50,7 @@ app.use('/', center_3.default);
 app.use('/cart', cart_1.default);
 app.use('/table', table_1.default);
 app.use('/order', order_1.default);
+app.use('/chef', chef_1.default);
 // app.use('/', testImage)
 io.on('connection', (socket) => {
     socket.on("test", (msg) => {
@@ -58,6 +60,11 @@ io.on('connection', (socket) => {
         const res = yield axios_1.default.get("http://localhost:4000/table");
         const data = res.data;
         io.emit('table update', data);
+    }));
+    socket.on("order update", () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield axios_1.default.get("http://localhost:4000/chef");
+        const data = res.data;
+        io.emit('order update', data);
     }));
 });
 server.listen(4000, () => {

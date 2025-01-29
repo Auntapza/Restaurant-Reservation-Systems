@@ -28,8 +28,11 @@ router.use('/pay', pay_1.default);
 // reservation adding
 router.post('/reservation', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { tableId, foodList, reservationData } = req.body;
+        const { tableId, foodList, reservationData, time } = req.body;
         const token = req.cookies['token'];
+        const currentTime = new Date();
+        const serviceTime = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), Number(time.split(":")[0]), Number(time.split(":")[1]), 0);
+        console.log(serviceTime);
         const { userId } = (0, token_1.verifyToken)(token);
         if (reservationData.slip_img) {
             const slipOkRes = yield (0, checkSlip_1.default)(reservationData.slip_img, 20);
@@ -41,6 +44,7 @@ router.post('/reservation', (req, res) => __awaiter(void 0, void 0, void 0, func
                     data: {
                         acc_id: Number(userId),
                         order_status: "ordering",
+                        service_time: serviceTime,
                         payment: {
                             create: {
                                 status: "paid",
@@ -59,7 +63,11 @@ router.post('/reservation', (req, res) => __awaiter(void 0, void 0, void 0, func
                     }
                 });
                 if (createdData) {
-                    res.json(slipOkRes.slipOkData);
+                    socket_1.default.emit("order update");
+                    res.json({
+                        slipData: slipOkRes.slipOkData,
+                        order: createdData
+                    });
                 }
                 else {
                     res.status(403).json({
@@ -149,6 +157,7 @@ router.post('/checkin', (req, res) => __awaiter(void 0, void 0, void 0, function
                 }
             });
             socket_1.default.emit("table update");
+            socket_1.default.emit("order update");
             res.status(200).json({
                 msg: "Order Updated",
                 createdData: updatedOrder

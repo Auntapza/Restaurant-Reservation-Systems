@@ -65,4 +65,25 @@ router.get('/reservation', async(req, res) => {
     
 })
 
+router.get('/:orderid', async(req, res) => {
+
+    const { orderid } = req.params;
+
+    const orderData = await prisma.order.findUnique({
+        where: {
+            order_id: Number(orderid)
+        },
+        include: {
+            OrderDetail: {
+                include: {
+                    Food: true
+                }
+            },
+        }
+    })
+
+    res.json(orderData)
+
+})
+
 export default router

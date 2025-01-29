@@ -22,7 +22,8 @@ interface SlipData {
 interface input {
   tableId: string,
   foodList: cartList[],
-  reservationData: SlipData
+  reservationData: SlipData,
+  time: string
 }
 
 router.use('/', orderData)
@@ -33,8 +34,14 @@ router.use('/pay', pay)
 router.post('/reservation', async (req, res) => {
 
   try {
-    const { tableId, foodList, reservationData } = req.body as input;
+    const { tableId, foodList, reservationData, time } = req.body as input;
     const token = req.cookies['token'];
+
+    const currentTime = new Date()
+    const serviceTime = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate(), 
+    Number(time.split(":")[0]), Number(time.split(":")[1]), 0)
+
+    console.log(serviceTime);
 
     const { userId } = verifyToken(token) as JwtPayload;
 
@@ -50,6 +57,7 @@ router.post('/reservation', async (req, res) => {
             data: {
                 acc_id: Number(userId),
                 order_status: "ordering",
+                service_time: serviceTime,
                 payment: {
                     create: {
                         status: "paid",
@@ -69,7 +77,11 @@ router.post('/reservation', async (req, res) => {
         })
 
         if (createdData) {
-            res.json(slipOkRes.slipOkData);
+            socket.emit("order update")
+            res.json({
+              slipData: slipOkRes.slipOkData,
+              order: createdData
+            });
         } else {
             res.status(403).json({
                 msg: 'Create Reservation fail'
@@ -171,6 +183,7 @@ router.post('/checkin', async(req, res) => {
       })
 
       socket.emit("table update")
+      socket.emit("order update")
 
       res.status(200).json({
         msg: "Order Updated",
