@@ -1,10 +1,14 @@
 'use client'
 
 import socket from "@/backend/lib/socket";
+import api from "@/function/api";
 import useFetchData from "@/hooks/useFetch";
 import { faUser, faUtensils, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 interface FoodItem {
     food_id: number;
@@ -72,7 +76,7 @@ export default function Main() {
     
     return (
         <>
-            <div>
+            <div className="mb-16">
                 <div className="container mx-auto px-4 pt-20 pb-24">
                     {/* Quick Stats */}
                     <div className="grid grid-cols-2 gap-4 mb-6">
@@ -81,12 +85,12 @@ export default function Main() {
                     {/* Quick Actions */}
                     <div className="grid grid-cols-2 gap-4 mb-6">
                         {/* Order Food */}
-                        <button className="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white p-6 rounded-xl flex items-center gap-4 shadow-sm hover:from-yellow-600 hover:to-yellow-700 transition w-full">
+                        <Link href={'waiter/table'} className="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white p-6 rounded-xl flex items-center gap-4 shadow-sm hover:from-yellow-600 hover:to-yellow-700 transition w-full">
                             <div className="bg-yellow-400/30 p-3 rounded-lg">
                                 <FontAwesomeIcon icon={faUtensils} className="text-xl"/>
                             </div>
                             <span className="text-lg font-medium">สั่งอาหารให้ลูกค้า</span>
-                        </button>
+                        </Link>
                     </div>
                 </div>
                 {/* Active Orders */}
@@ -95,7 +99,7 @@ export default function Main() {
                         <h2 className="text-lg font-bold">ออเดอร์ที่กำลังดำเนินการ</h2>
                     </div>
                     <div className="divide-y">
-                        {data?.order.map((e, index) => <Order data={e} key={index}/>)}
+                        {data?.order.map((e, index) => <Order data={e} state={setDep} key={index}/>)}
                     </div>
                 </div>
             </div>
@@ -125,7 +129,22 @@ function QucikStat({data}: {data: {
     )
 }
 
-function Order({ data }: { data: Order }) {
+function Order({ data, state }: { data: Order, state: Dispatch<SetStateAction<number>> }) {
+
+    async function CompleteTask() {
+        const res = api.post('http://localhost:4000/waiter/page/'+data.order_id, {})
+
+        toast.promise(res, {
+            loading: 'Loadding....',
+            success: (res) => {
+                state((prv) => prv + 1)
+                return res.msg
+            },
+            error: (res) => res.msg
+        }) 
+        
+    }
+    
     return (
         <div className="p-4">
             <div className="flex justify-between items-start mb-4">
@@ -147,7 +166,7 @@ function Order({ data }: { data: Order }) {
             </div>
             {/* Action Buttons */}
             <div className="flex gap-2">
-                <button className="flex-1 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition">
+                <button onClick={CompleteTask} className="flex-1 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition">
                     Done!
                 </button>
             </div>

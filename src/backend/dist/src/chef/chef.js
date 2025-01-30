@@ -47,7 +47,8 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                             food_name: true
                         }
                     },
-                    quantity: true
+                    quantity: true,
+                    complete: true
                 }
             }
         },
@@ -55,7 +56,11 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             modifyTime: 'asc'
         }
     });
-    const reservationCondition = order.filter(e => {
+    const orderDetailFillter = order.map(e => {
+        const detail = e.OrderDetail.filter(e => e.complete == 'none');
+        return Object.assign(Object.assign({}, e), { OrderDetail: detail });
+    });
+    const reservationCondition = orderDetailFillter.filter(e => {
         if (e.order_status == "ordering") {
             const now = new Date();
             const orderTime = new Date(e.service_time).getTime();

@@ -49,6 +49,9 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                     Food: true
                 }
             }
+        },
+        orderBy: {
+            order_date: 'asc'
         }
     });
     let orderData = [];
@@ -56,7 +59,6 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     for (let i = 0; i < 7; i++) {
         const day = start.setDate(start.getDate() + 1);
         const currentDay = new Date(day);
-        console.log(currentDay);
         const end = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate(), 23, 59, 59);
         let sum = 0;
         AllOrder.map(e => {
@@ -96,18 +98,18 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // revenu Chart
     let revenuData = [];
     for (let i = 0; i < 7; i++) {
-        const day = start.setDate(start.getDate() + 1);
-        const currentDay = new Date(day);
-        const end = new Date(currentDay.getFullYear(), currentDay.getMonth(), currentDay.getDate(), 23, 59, 59);
+        const start = new Date().setDate(new Date().getDate() - 6);
+        const format = new Date(new Date(start).setDate(new Date(start).getDate() + i));
+        const currentDay = new Date(format.getFullYear(), format.getMonth(), format.getDate(), 23, 59, 59);
         let sum = 0;
         AllOrder.map(e => {
-            if (e.order_date < end) {
+            if (new Date(e.order_date).getTime() < currentDay.getTime()) {
                 e.OrderDetail.map(e => {
-                    sum += (e.Food.food_price * e.quantity);
+                    sum += e.Food.food_price * e.quantity;
                 });
             }
         });
-        revenuData = [...orderData, sum];
+        revenuData = [...revenuData, sum];
     }
     res.status(200).json({
         totalMenu,

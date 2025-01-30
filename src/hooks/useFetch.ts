@@ -18,7 +18,9 @@ export default function useFetchData<T>({url, params, dependencies = []}:useFetc
 
     async function fetchData() {
         setLoader(true);
-        const res = await fetch(apiEndPoint);
+        const res = await fetch(apiEndPoint, {
+            credentials: 'include'
+        });
         const data = await res.json();
         setData(data);
         setLoader(false);

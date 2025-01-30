@@ -41,10 +41,7 @@ router.get('/', async(req, res) => {
         res.json({
             totalOrder: order.length,
             totalClient: rawData.length,
-            order: orderPending
-            // account: {
-            //     fullname: `${accountData?.acc_fname} ${accountData?.acc_lname}`
-            // }
+            order: orderPending.filter(e => e != undefined)
         })
     } catch (err) {
         const error = err as Error;
@@ -53,6 +50,43 @@ router.get('/', async(req, res) => {
         })
     }
 
+})
+
+router.post('/:orderId', async(req, res) => {
+
+    try {
+        const { orderId } = req.params;
+
+        const update = await prisma.orderdetail.updateMany({
+            where: {
+                order_id: Number(orderId)
+            },
+            data: {
+                complete: 'complete'
+            }
+        })
+    
+        if (update) {
+            res.json({
+                msg: "Complete Task"
+            })
+        } else {
+            res.status(400).json({
+                msg: "Error to complete Task"
+            })
+        }
+    } catch (err) {
+
+        const error = err as Error
+
+        console.log(error);
+        
+
+        res.status(400).json({
+            msg: error.message
+        })
+    }
+    
 })
 
 export default router

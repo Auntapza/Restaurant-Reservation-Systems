@@ -28,6 +28,7 @@ const cart_1 = __importDefault(require("./src/user/cart"));
 const order_1 = __importDefault(require("./src/order/order"));
 const axios_1 = __importDefault(require("axios"));
 const chef_1 = __importDefault(require("./src/chef/chef"));
+const order_2 = __importDefault(require("./src/user/order"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
     credentials: true,
@@ -53,6 +54,7 @@ app.use('/table', table_1.default);
 app.use('/order', order_1.default);
 app.use('/chef', chef_1.default);
 app.use('/waiter', center_4.default);
+app.use('/user', order_2.default);
 // app.use('/', testImage)
 io.on('connection', (socket) => {
     socket.on("test", (msg) => {
@@ -69,6 +71,35 @@ io.on('connection', (socket) => {
         io.emit('order update', data);
     }));
 });
+const interval = setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
+    io.emit('order update');
+    const order = yield prisma.order.findMany({
+        where: {
+            order_status: 'ordering'
+        }
+    });
+    const LateOrder = order.map(e => {
+        const now = new Date().getTime();
+        const serviceTime = new Date(e.service_time).getTime();
+        if (now - serviceTime >= (1000 * 60 * 60)) {
+            return e.order_id;
+        }
+        else {
+            return undefined;
+        }
+    }).filter(e => e != undefined);
+    if (LateOrder.length >= 1) {
+        console.log(LateOrder[0]);
+        yield prisma.order.update({
+            where: {
+                order_id: LateOrder[0]
+            },
+            data: {
+                order_status: 'cancel'
+            }
+        });
+    }
+}), (1000));
 server.listen(4000, () => {
     console.log('Now Server running on port 4000');
 });

@@ -9,7 +9,7 @@ import Image from "next/image";
 export default function Layout({children}: LayoutProps) {
     return (
         <>
-            <nav className="w-full fixed top-0 z-50 border-b">
+            <nav className="w-full bg-white fixed top-0 z-50 border-b">
                 <div className="container mx-auto px-4">
                     <div className="flex items-center justify-between h-16">
                         {/* Title and User */}

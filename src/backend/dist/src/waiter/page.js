@@ -48,14 +48,41 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.json({
             totalOrder: order.length,
             totalClient: rawData.length,
-            order: orderPending
-            // account: {
-            //     fullname: `${accountData?.acc_fname} ${accountData?.acc_lname}`
-            // }
+            order: orderPending.filter(e => e != undefined)
         });
     }
     catch (err) {
         const error = err;
+        res.status(400).json({
+            msg: error.message
+        });
+    }
+}));
+router.post('/:orderId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { orderId } = req.params;
+        const update = yield prisma.orderdetail.updateMany({
+            where: {
+                order_id: Number(orderId)
+            },
+            data: {
+                complete: 'complete'
+            }
+        });
+        if (update) {
+            res.json({
+                msg: "Complete Task"
+            });
+        }
+        else {
+            res.status(400).json({
+                msg: "Error to complete Task"
+            });
+        }
+    }
+    catch (err) {
+        const error = err;
+        console.log(error);
         res.status(400).json({
             msg: error.message
         });

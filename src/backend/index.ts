@@ -15,6 +15,7 @@ import cart from './src/user/cart'
 import order from './src/order/order'
 import axios from 'axios';
 import chef from './src/chef/chef'
+import user from './src/user/order'
 
 const app = express();
 app.use(cors({
@@ -44,6 +45,7 @@ app.use('/table', table);
 app.use('/order', order)
 app.use('/chef', chef)
 app.use('/waiter', waiter)
+app.use('/user', user)
 // app.use('/', testImage)
 
 io.on('connection', (socket) => {
@@ -68,6 +70,41 @@ io.on('connection', (socket) => {
     })
 
 })
+
+const interval = setInterval(async() => {
+
+    io.emit('order update')
+
+    const order = await prisma.order.findMany({
+        where: {
+            order_status: 'ordering'
+        }
+    })
+
+    const LateOrder = order.map(e => {
+        const now = new Date().getTime();
+        const serviceTime = new Date(e.service_time).getTime();
+
+        if (now - serviceTime >= (1000 * 60 * 60)) {
+            return e.order_id
+        } else {
+            return undefined
+        }        
+    }).filter(e => e != undefined)
+
+    if (LateOrder.length >= 1) {
+        console.log(LateOrder[0]);
+        await prisma.order.update({
+            where: {
+                order_id: LateOrder[0]
+            },
+            data: {
+                order_status: 'cancel'
+            }
+        })
+    }
+
+}, (1000))
 
 server.listen(4000, () => {
     console.log('Now Server running on port 4000');

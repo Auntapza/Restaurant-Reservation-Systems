@@ -36,7 +36,8 @@ router.get("/", async(req, res) => {
                             food_name: true
                         }
                     },
-                    quantity: true
+                    quantity: true,
+                    complete: true
                 }
             }
         },
@@ -45,7 +46,15 @@ router.get("/", async(req, res) => {
         }
     })
 
-    const reservationCondition = order.filter(e => {
+    const orderDetailFillter = order.map(e => {
+        const detail = e.OrderDetail.filter(e => e.complete == 'none')
+        return {
+            ...e,
+            OrderDetail: detail
+        }
+    })
+
+    const reservationCondition = orderDetailFillter.filter(e => {
         
         if (e.order_status == "ordering") {
             const now = new Date();

@@ -9,6 +9,25 @@ import Foodpopup from './FoodPopup'
 import Footer from '@/component/Footer'
 import { foodData } from '@/interface/interface'
 import FoodList from './FoodList'
+import banner from '@/img/homepage/banner.gif'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser } from '@fortawesome/free-solid-svg-icons'
+import useFetchData from '@/hooks/useFetch'
+
+interface MenuList {
+    food_img: string,
+    food_name: string,
+    quantity: number
+}
+
+interface CurrentOrder {
+    order_id: number,
+    table_id: string,
+    fullname: string,
+    order_date: Date,
+    service_time: Date,
+    MenuList: MenuList[]
+}
 
 function Mainpage() {
 
@@ -16,6 +35,10 @@ function Mainpage() {
     const [foodPopupData, setFoodPopupData] = useState<foodData>();
     const [catSelect, setCatSelect] = useState<number>(0);
     const [searchVal, setSearchVal] = useState<string>('');
+
+    const { data, loader } = useFetchData<CurrentOrder>({
+        url: 'http://localhost:4000/user/order'
+    })
     
     // For category looping
     const CategoryData = [
@@ -63,7 +86,40 @@ function Mainpage() {
         <>
             <Foodpopup data={foodPopupData as foodData} isOn={menuDetails} state={setMenuDetails}/>
             {/* Banner */}
-            <div className='h-[30rem] bg-gray-500'></div>
+            {data ? 
+                <div className='h-[30rem] container mx-auto'>
+                    <div className='flex h-full w-full'>
+                        <div className='bg-white w-full mt-5'>
+                            <p className='text-3xl font-bold'>Order No : {data.order_id}</p>
+                            <div className='my-5 px-4 flex gap-10 items-center'>
+                                <FontAwesomeIcon icon={faUser} className='text-7xl'/>
+                                <p className='text-2xl'>{data.fullname}</p>
+                            </div>
+                            <div className='px-4 text-3xl grid gap-5'>
+                                <p>Table No : {data.table_id}</p>
+                                <p>Order Time : {new Date(data.order_date).toString().split(' ')[4].slice(0, 5)}</p>
+                                <p>Check-in Time : {new Date(data.service_time).toString().split(' ')[4].slice(0, 5)}</p>
+                            </div>
+                        </div>
+                        <div className='bg-orange-500 w-full p-10'>
+                            <div className='bg-white rounded-xl border p-3 border-black shadow size-full'>
+                                <p className='text-3xl font-bold'>Menu List</p>
+
+                                <div className='px-4 mt-4'>
+                                    {data.MenuList.map((e, index) => 
+                                    <div className='flex w-full justify-between items-center' key={index}>
+                                        <Image src={e.food_img} width={500} height={500} alt='' className='size-20 object-cover roundedlg mb-5'/>
+                                        <p className='text-xl'>{e.food_name}</p>
+                                        <p className='text-xl'>x{e.quantity}</p>
+                                    </div>)}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div> :
+                <Image src={banner} alt='' className='w-full'/>
+        }
 
             {/* Category */}
             <div className='relative after:bg-black after:w-full after:h-[2px] after:absolute flex justify-center items-center 

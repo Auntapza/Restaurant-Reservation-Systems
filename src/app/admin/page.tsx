@@ -149,7 +149,7 @@ function LineChart({label, data}: ChartData) {
                             data,
                             backgroundColor: "rgb(249 115 22)",
                             borderColor: 'rgb(249 115 22)',
-                            pointRadius: [0, 0, 0, 0, 0, 3],
+                            pointRadius: 3,
                         }
                     ]
                 }

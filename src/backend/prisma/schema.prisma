@@ -154,4 +154,5 @@ enum order_order_status {
   ordering
   pending
   complete
+  cancel
 }
