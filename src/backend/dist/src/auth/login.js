@@ -42,7 +42,7 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             Role: data.Account.role
         };
         const token = (0, token_1.createToken)(payload);
-        res.cookie('token', token, { httpOnly: true });
+        res.cookie('token', token, { sameSite: 'none', secure: true });
         res.status(200).json({
             msg: 'Login successfully',
             role: data.Account.role

@@ -28,6 +28,7 @@ router.get('/auth', async(req, res) => {
                     acc_id: Number(tokenPayload.userId)
                 }
             })
+
             if (userData) {
                 res.status(200).json(tokenPayload);
                 

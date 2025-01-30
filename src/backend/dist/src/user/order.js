@@ -54,13 +54,11 @@ router.get('/order', (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 };
             })
         };
-        res.json(format);
+        res.json(order ? format : undefined);
     }
     catch (err) {
         const error = err;
-        res.status(404).json({
-            msg: error.message
-        });
+        res.status(404).json(undefined);
     }
 }));
 exports.default = router;

@@ -47,13 +47,11 @@ router.get('/order', async(req, res) => {
             })      
         }
 
-        res.json(format)
+        res.json(order ? format : undefined)
 
     } catch (err) {
         const error = err as Error
-        res.status(404).json({
-            msg: error.message
-        })
+        res.status(404).json(undefined)
     }
 
 })

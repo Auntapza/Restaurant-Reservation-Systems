@@ -39,6 +39,8 @@ function Mainpage() {
     const { data, loader } = useFetchData<CurrentOrder>({
         url: 'http://localhost:4000/user/order'
     })
+
+    console.log(data);
     
     // For category looping
     const CategoryData = [

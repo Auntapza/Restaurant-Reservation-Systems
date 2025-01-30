@@ -36,7 +36,7 @@ router.post('/', async(req, res) => {
             Role: data.Account.role
         };
         const token = createToken(payload);
-        res.cookie('token', token, {httpOnly: true});
+        res.cookie('token', token, {sameSite: 'none', secure: true});
         res.status(200).json({
             msg: 'Login successfully',
             role: data.Account.role
