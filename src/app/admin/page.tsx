@@ -1,38 +1,55 @@
 'use client'
 
 import { Chart } from "chart.js/auto"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import { Cart, Menu } from "@/img/svg/svg";
 import Dashbord from "@/img/dashbord";
 import User from "@/img/user";
 import DataBlock from "./datablock";
+import useFetch from "@/hooks/useFetch";
+import fetchData from "./fetch";
+
+interface dashboradData {
+    totalMenu: number,
+    totalOrder: number,
+    totalClient: number,
+    todayRevenu: number,
+    chart: {
+        ChartLabel: string[],
+        revenuData: number[]
+        orderData: number[]
+    }
+}
 
 // Mainpage
 export default function Mainpage() {
 
+    const { data, loader } = useFetch<dashboradData>({
+        url: "http://localhost:4000/admin"
+    }) 
+
     const blockData = [
         {
             title: 'Total menu',
-            value: 260,
+            value: data?.totalMenu,
             image: <Menu/>
         },
         {
             title: 'Total Order Today',
-            value: 5,
+            value: data?.totalOrder,
             image: <Cart/>
         },
         {
             title: 'Total Client Today',
-            value: 240,
+            value: data?.totalClient,
             image: <User/>
         },
         {
             title: 'Today Revenue',
-            value: '3400฿',
+            value: `${data?.todayRevenu}฿`,
             image: <Dashbord/>
-        }
-        
+        } 
     ]
 
     return (
@@ -46,28 +63,33 @@ export default function Mainpage() {
                 <div className="grid grid-cols-2 gap-6">
                     <div className="w-full bg-white shadow p-5 rounded-lg">
                         <p className="text-3xl mb-5">Revenue</p>
-                        <LineChart/>
+                        <LineChart label={data?.chart.ChartLabel} data={data?.chart.revenuData}/>
                     </div>
                     <div className="w-full bg-white shadow p-5 rounded-lg">
                         <p className="text-3xl mb-5">Order Summery</p>
-                        <BarChart/>
+                        <BarChart label={data?.chart.ChartLabel} data={data?.chart.orderData}/>
                     </div>
                 </div>
 
-                <div className="mt-5 p-5 bg-white shadow-md rounded-xl">
+                {/* <div className="mt-5 p-5 bg-white shadow-md rounded-xl">
                     <p className="text-3xl">Order List</p>
                     <div className="my-5"></div>
-                </div>
+                </div> */}
             </div>
         </>
     )
+}
+
+interface ChartData {
+    label: string[] | undefined,
+    data: number[] | undefined
 }
 
 ////////////////// component //////////////////////
 
 // Bar chart
 
-function BarChart() {
+function BarChart({label, data}: ChartData) {
 
     const chartRef = useRef(null);
 
@@ -79,11 +101,11 @@ function BarChart() {
             const newChart = new Chart(context, {
                 type: "bar",
                 data: {
-                    labels: ['Monday', 'Tusday', 'Wenday', "Thusday", 'Friday', "Satday", "Sunday"],
+                    labels: label,
                     datasets: [
                         {
-                            label: "Income",
-                            data: [41, 63, 82, 29, 54, 77, 36],
+                            label: "Revenu",
+                            data,
                             backgroundColor: "rgb(249 115 22)",
                             borderRadius: 5
                         }
@@ -95,7 +117,7 @@ function BarChart() {
                 newChart.destroy()
             }
         }
-    }, [])
+    }, [data, label])
 
 
     return (
@@ -107,7 +129,7 @@ function BarChart() {
 
 // Line chart
 
-function LineChart() {
+function LineChart({label, data}: ChartData) {
     const chartRef = useRef(null);
 
     useEffect(() => {
@@ -118,14 +140,14 @@ function LineChart() {
             const newChart = new Chart(context, {
                 type: "line",
                 data: {
-                    labels: ['Monday', 'Tusday', 'Wenday', "Thusday", 'Friday', "Satday", "Sunday"],
+                    labels: label,
                     datasets: [
                         {
-                            label: "Income",
-                            data: [17, 38, 59, 72, 84, 95],
+                            label: "Revenu",
+                            data,
                             backgroundColor: "rgb(249 115 22)",
                             borderColor: 'rgb(249 115 22)',
-                            pointRadius: [0, 0, 0, 0, 0, 3],
+                            pointRadius: 3,
                         }
                     ]
                 }
@@ -134,7 +156,7 @@ function LineChart() {
                 newChart.destroy()
             }
         }
-    }, [])
+    }, [data, label])
 
 
     return (

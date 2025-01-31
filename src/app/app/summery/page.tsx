@@ -1,38 +1,55 @@
 'use client'
 
-import dummyFoodImage from "@/img/homepage/dummyPopfood.png"
+import cart from "@/function/cart";
+import { useOrder } from "@/hooks/order";
+import { cartData, orderDetail } from "@/interface/interface";
 import Image from 'next/image';
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Summery() {
 
     const rotuer = useRouter();
     const param = useSearchParams();
 
+    const router = useRouter();
+
     const TableSelect = param.get('table');
     const time = param.get('time');
+    const { order, setOrder } = useOrder();
+
+    const [cartItem, setCartItem] = useState<cartData[]>([]);
+
+    async function getCratData() {
+        const data = await cart.get();
+        setCartItem(data)
+    }
 
     useEffect(() => {
         if (!TableSelect || !time) {
             rotuer.replace('table');
         }
+
+
+        getCratData();
+
     }, [])
 
-    const CartData = [
-        {
-            image: dummyFoodImage,
-            name: "Pizza",
-            price: 150,
-            count: 1
-        },
-        {
-            image: dummyFoodImage,
-            name: "Pizza",
-            price: 150,
-            count: 1
-        },
-    ]
+    function makeOrderPayload() {
+        const data:orderDetail = {
+            tableId: TableSelect as string,
+            orderTime: time as string,
+            foodList: cartItem,
+            accId: cart.userId,
+            orderId: 1,
+            orderDate: String(new Date())
+        }
+
+        setOrder(data);
+
+        router.push('payment')
+
+    }
 
     return (
         <>
@@ -54,20 +71,20 @@ export default function Summery() {
                                     </tr>
                                 </thead>
                                 <tbody className="text-center">
-                                    {CartData.map((e, index) => {
+                                    {cartItem.map((e, index) => {
                                         return (
                                             <tr key={index}>
                                                 <td className="grid place-items-center">
-                                                    <Image src={e.image} alt="" className="w-24 h-24 rounded" />
+                                                    <Image width={100} height={100} src={e.foodImg} alt="" className="w-24 h-24 rounded" />
                                                 </td>
-                                                <td>{e.name}</td>
-                                                <td>{e.price}฿</td>
+                                                <td>{e.foodName}</td>
+                                                <td>{e.foodPrice}฿</td>
                                                 <td className="text-start">
                                                     <div className='flex gap-x-2 items-center justify-evenly'>
-                                                        <span className='text-xl'>{e.count}</span>
+                                                        <span className='text-xl'>{e.quantity}</span>
                                                     </div>
                                                 </td>
-                                                <td>{e.price * e.count}฿</td>
+                                                <td>{e.foodPrice * e.quantity}฿</td>
                                             </tr>
                                         )
                                     })}
@@ -76,6 +93,12 @@ export default function Summery() {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="container mx-auto">
+
+                <p className="text-red-500 text-lg font-bold">Note : Customers are required to pay for the food after receiving the service. 
+                    A reservation fee of 20 THB will be charged to confirm the booking.</p>
+                <p className="text-xl mt-3">Reservation Fee: 20฿</p>
             </div>
             <div className="fixed bottom-0 w-full flex justify-center bg-white
             border-t shadow-[0_-4px_4px_0_#00000055] py-7 rounded-t-xl mt-6">
@@ -87,7 +110,7 @@ export default function Summery() {
                     <p className="font-bold text-2xl">Time: {time}</p>
                     <button className="bg-orange-500 rounded-lg text-white py-4 px-8 2xl:text-3xl xl:text-2xl disabled:bg-orange-300
                     transition disabled:cursor-default"
-                    onClick={() => {rotuer.push('payment')}}>Purchase Order</button>
+                    onClick={makeOrderPayload}>Purchase Order</button>
                 </div>
             </div>
         </>

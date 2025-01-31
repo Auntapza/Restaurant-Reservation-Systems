@@ -5,7 +5,14 @@ const nextConfig: NextConfig = {
       remotePatterns: [{
         protocol: 'http',
         hostname: 'localhost'
-      }]
+      },
+    {
+      protocol: 'http',
+      hostname: 'localhost:4000'
+    }]
+    },
+    eslint: {
+      ignoreDuringBuilds: true
     }
 };
 

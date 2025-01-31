@@ -1,37 +1,64 @@
-export default function TableSelect({ tableVal, selectFunction } : {
+interface TableApi {
+    tableId: string,
+    status: number
+}
+
+interface Component extends DOMAttributes<HTMLDivElement> {
     selectFunction: Function,
-    tableVal?: string
-}) {
+    tableVal?: string,
+    className?: string
+}
+
+const socket = io("http://localhost:4000");
+
+export default function TableSelect({ tableVal, selectFunction, className, ...rest }: Component) {
+
+    const [dep, setDep] = useState(0)
+
+    const { data, loader } = useFetchData<TableApi[]>({
+        url: 'http://localhost:4000/table',
+        dependencies: [dep]
+    })
+
+    console.log(data);
+
+    useEffect(() => {
+        socket.on("table update", (res) => {
+            setDep((prv) => (prv+1));
+        })
+    }, [])
 
     return (
         <>
-            <div className="grid grid-rows-2 grid-cols-3 w-full justify-items-center">
-                <Table selected={tableVal == 'A01'} onClick={(e) => {selectFunction("A01", e)}}/> 
-                <Table selected={tableVal == 'A02'} onClick={(e) => {selectFunction("A02", e)}} state={1}/> 
-                <Table selected={tableVal == 'A03'} onClick={(e) => {selectFunction("A03", e)}}/> 
-                <Table selected={tableVal == 'A04'} onClick={(e) => {selectFunction("A04", e)}}/> 
-                <Table selected={tableVal == 'A05'} onClick={(e) => {selectFunction("A05", e)}} state={2}/> 
-                <Table selected={tableVal == 'A06'} onClick={(e) => {selectFunction("A06", e)}}/> 
+            <div {...rest} className={`grid grid-rows-2 grid-cols-3 w-full mx-3 lg:mx-0 mb-24 lg:justify-items-center gap-5 ${className}`}>
+                <Loading fallback={<p className='text-2xl font-bold'>Loadding...</p>} loadding={loader}>
+                    {data?.map((e, index) => {
+                        return (
+                            <Table key={index} name={e.tableId} selected={tableVal == e.tableId}
+                                onClick={(ev) => {selectFunction(e.tableId, ev, e.status)}}
+                                state={e.status}/>
+                        )
+                    })}
+                </Loading>
             </div>  
         </>
     )
 }
 
-enum State {
-    idle = 0,
-    busy = 1,
-    ordered = 2,
-}
-
+import useFetchData from '@/hooks/useFetch';
 import correct from '@/img/correct.png'
+import { TableState, tableStatus } from '@/interface/interface'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { MouseEventHandler, MouseEvent } from 'react'
+import { MouseEventHandler, MouseEvent, useEffect, useState, DOMElement, DOMAttributes } from 'react'
+import { io } from 'socket.io-client'
+import Loading from './Load';
 
-function Table( {onClick, state, selected} : {
+function Table( {onClick, state, selected, name} : {
     onClick: MouseEventHandler,
-    state?: State | 0,
-    selected?: boolean
+    state?: TableState | number,
+    selected?: boolean,
+    name: string
 } ) {
 
     const path = usePathname();
@@ -59,9 +86,11 @@ function Table( {onClick, state, selected} : {
                     :
                     ''
                 }
+                <div className={`bg-white border rounded shadow size-full grid items-center lg:hidden font-bold text-2xl
+                    ${state == 1 ? 'bg-[#f00] text-white' : state == 2 ? 'bg-[#fa0] text-white' : ''}`}>{name}</div>
                 <svg width="256px" height="256px" viewBox="-2.4 -2.4 28.80 28.80" xmlns="http://www.w3.org/2000/svg" fill={
                     state == 1 ? '#f00' : state == 2 ? '#fa0' : '#000'
-                } stroke="#000000" strokeWidth="0.00024000000000000003"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" stroke="#CCCCCC" strokeWidth="0.048"></g><g id="SVGRepo_iconCarrier"> <title>table</title> <path d="M18.76,6l2,4H3.24l2-4H18.76M20,4H4L1,10v2H3v7H5V16H19v3h2V12h2V10L20,4ZM5,14V12H19v2Z"></path> <rect width="24" height="24" fill="none"></rect> </g></svg>
+                } className='hidden lg:block' stroke="#000000" strokeWidth="0.00024000000000000003"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round" stroke="#CCCCCC" strokeWidth="0.048"></g><g id="SVGRepo_iconCarrier"> <title>table</title> <path d="M18.76,6l2,4H3.24l2-4H18.76M20,4H4L1,10v2H3v7H5V16H19v3h2V12h2V10L20,4ZM5,14V12H19v2Z"></path> <rect width="24" height="24" fill="none"></rect> </g></svg>
             </button>
         </>
     )

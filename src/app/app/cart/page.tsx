@@ -2,23 +2,46 @@
 
 import Image from "next/image";
 
-import dummyFoodImage from "@/img/homepage/dummyPopfood.png"
 import { useRouter } from "next/navigation";
 import Button from "@/component/Button";
+import { useEffect, useState } from "react";
+import { cartData } from "@/interface/interface";
+import cart from "@/function/cart"
 
 export default function Cart() {
-
+    
     const router = useRouter();
+    const [cartItem, setCart] = useState<cartData[]>([]);
+    const [totalPrice, setTotalPrice] = useState<number>(0)
+    
+    async function getCartData() {
+        const data = await cart.get();
+        setCart(cart.cartList);
+        return data
+    }
 
-    // Cart Data
-    const CartData = [
-        {
-            image: dummyFoodImage,
-            name: "Pizza",
-            price: 150,
-            count: 1
-        },
-    ]
+    useEffect(() => {
+        getCartData();
+    }, [])
+
+    useEffect(() => {
+        setTotalPrice(cart.calculateTotal())
+    }, [cartItem])
+
+    async function editQuantity(o:string, quantity:number, foodId:number) {
+        if ((!(quantity == 1) && o === '-') || ((o === '+') && (quantity < 10))) {
+            await cart.update(foodId, await eval(`${quantity}${o}1`))
+            setCart(await getCartData());
+        } else {
+            if ((quantity == 1) && o === '-') {
+                const res = confirm('Do you want to remove this food?');
+                if (res) {
+                    cart.remove(foodId);
+                    setCart(await getCartData());
+                }
+            }
+        }
+    }
     
     return (
         <div className="flex justify-center">
@@ -37,31 +60,35 @@ export default function Cart() {
                                 </tr>
                             </thead>
                             <tbody className="text-center">
-                                {CartData.map((e, index) => {
+                                {cartItem.length > 0 ? cartItem.map((e, index) => {
                                     return (
                                         <tr key={index}>
                                             <td className="grid place-items-center">
-                                                <Image src={e.image} alt="" className="w-24 h-24 rounded"/>
+                                                <Image width={50} height={50} src={e.foodImg} alt="" className="w-24 h-24 rounded"/>
                                             </td>
-                                            <td>{e.name}</td>
-                                            <td>{e.price}฿</td>
+                                            <td>{e.foodName}</td>
+                                            <td>{e.foodPrice}฿</td>
                                             <td className="text-start">
                                                 <div className='flex gap-x-2 items-center justify-evenly'>
-                                                    <div className='hover:text-orange-500 transition cursor-pointer 
+                                                    <div onClick={() => {editQuantity('-', e.quantity, e.foodId)}} className='hover:text-orange-500 transition cursor-pointer 
                                                     rounded-full px-4 pb-2 text-3xl shadow'>
                                                         <span>-</span>
                                                     </div>
-                                                    <span className='text-xl'>{e.count}</span>
-                                                    <div className='hover:text-orange-500 transition cursor-pointer 
+                                                    <span className='text-xl'>{e.quantity}</span>
+                                                    <div onClick={() => {editQuantity('+', e.quantity, e.foodId)}} className='hover:text-orange-500 transition cursor-pointer 
                                                     rounded-full px-3 pb-2 text-3xl shadow'>
                                                         <span>+</span>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>{e.price * e.count}฿</td>
+                                            <td>{e.foodPrice * e.quantity}฿</td>
                                         </tr>
                                     )
-                                })}
+                                }) : (
+                                    <tr>
+                                        <td colSpan={5} className="pt-5 text-slate-400">No menu in this cart</td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </div>
@@ -70,7 +97,7 @@ export default function Cart() {
                         <div className="w-full h-[2px] bg-black mt-8"></div>
                         <div className="flex items-center justify-between px-5">
                             <p className="text-gray-500 text-4xl font-bold mt-5 w-fit">Total</p>
-                            <p className="text-gray-500 text-4xl font-bold mt-5 w-fit">150฿</p>
+                            <p className="text-gray-500 text-4xl font-bold mt-5 w-fit">{totalPrice}฿</p>
                         </div>
                         <Button className="w-full mt-5" onClick={() => {router.push('/app/table')}}>Find Table</Button>
                     </div>

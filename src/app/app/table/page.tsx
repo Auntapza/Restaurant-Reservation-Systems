@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { InputHTMLAttributes, LegacyRef, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation"
 import TableSelect from "@/component/TableSelect";
 import Button from "@/component/Button";
@@ -12,6 +12,7 @@ export default function FindTable() {
 
     const [tableTarget, setTabletarget] = useState('');
     const [timeSelect, setTimeSelect] = useState('')
+    const timeInputRef = useRef<any>(null);
 
     const selectTable = (tableno: string) => {
         if (tableTarget == tableno) {
@@ -23,9 +24,9 @@ export default function FindTable() {
 
     return (
         <>
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center mt-4 min-h-screen">
                 <div className="container">
-                    <button onClick={() => { router.back() }} className="flex gap-3 text-4xl items-center w-fit">
+                    <button onClick={() => { router.push('/app') }} className="flex gap-3 text-4xl items-center w-fit">
                         <Arrow className="size-16" />
                         Back
                     </button>
@@ -43,9 +44,9 @@ export default function FindTable() {
                         Table : <b>{tableTarget == '' ? 'None' : tableTarget}</b>
                     </p>
                     <p className="font-bold text-2xl">Date : {`${new Date().getDate()}-${new Date().getMonth() + 1}-${new Date().getFullYear()}`}</p>
-                    <input type="time" className="border border-black rounded p-3" onChange={(e) => {
+                    <input ref={timeInputRef} type="time" className="border border-black rounded p-3" onChange={(e) => {
                         setTimeSelect(e.target.value);
-                    }} />
+                    }}/>
                     <Button className="px-8 transition py-4 disabled:bg-orange-300"
                         disabled={(timeSelect == '' || tableTarget == '')} 
                         onClick={() => { router.push(`/app/summery?table=${tableTarget}&time=${timeSelect}`) }}>

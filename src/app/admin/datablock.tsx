@@ -1,7 +1,7 @@
 export default function DataBlock({data} : {
     data : {
         title: string,
-        value: string | number,
+        value: string | number | undefined,
         image: JSX.Element
     }
 }) {
