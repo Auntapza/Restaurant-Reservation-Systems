@@ -6,18 +6,33 @@ import Link from "next/link";
 import useFetchData from "@/hooks/useFetch";
 import Loading from "@/component/Load";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import api from "@/function/api";
+import toast from "react-hot-toast";
 
 export default function AccountManagement() {
 
     const {data, loader} = useFetchData<any[]>({
         url: "http://localhost:4000/admin/account"
     })
-
+    const [dep, setDep] = useState(0);
     const router = useRouter();
 
     const getCustomer = () => {
         let fillter = data?.filter((e) => e.role == "customer");
         return fillter?.length;
+    }
+
+    const deleteWorkerAccount = async(accId: number | string) => {
+        let res = api.delete('http://localhost:4000/admin/account/'+accId)
+        await toast.promise(
+            res,{
+                loading: "Loadding...",
+                success: "Delete Data successfully",
+                error: "Fail to delete account"
+            }
+        )
+        setDep((prv) => prv + 1)
     }
 
     const getWorker = () => {
@@ -43,7 +58,7 @@ export default function AccountManagement() {
             <tr className="border-b">
                 <td className="p-3">{`${data.acc_fname}  ${data.acc_lname}`}</td>
                 <td className="p-3 capitalize">{data.role}</td>
-                <td className="p-3">
+                <td className="p-3 space-x-5">
                     <button className="bg-orange-200 font-bold p-3 rounded cursor-pointer text-orange-500"
                     onClick={() => {
                         router.push(`account/edit/${data.acc_id}`)

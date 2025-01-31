@@ -1,6 +1,6 @@
 'use client'
 
-import socket from "@/backend/lib/socket";
+import socket from "@/lib/socket";
 import api from "@/function/api";
 import useFetchData from "@/hooks/useFetch";
 import { faUser, faUtensils, IconDefinition } from "@fortawesome/free-solid-svg-icons";

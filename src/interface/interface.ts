@@ -7,7 +7,8 @@ export interface Layoutinterface {
 export interface NavbarMenu {
     title: string,
     path: string,
-    image: JSX.Element
+    image: JSX.Element,
+    disable?: boolean
 }
 
 export enum WorkerType {

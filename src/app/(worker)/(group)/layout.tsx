@@ -1,6 +1,6 @@
 import Sidebar from "@/component/worker/Sidebar";
 import { WorkerType } from "@/interface/interface";
-import { LayoutProps } from "../../../.next/types/app/layout";
+import { LayoutProps } from "../../../../.next/types/app/layout";
 
 export default function Main({children}:LayoutProps) {
     return (

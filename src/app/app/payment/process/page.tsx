@@ -19,8 +19,6 @@ const socket = io("http://localhost:4000");
 
 export default function PayProcess() {
 
-    const param = useSearchParams()
-    let payment = param.get('p');
     const router = useRouter();
 
     const { order, setOrder, clear } = useOrder();
@@ -72,7 +70,7 @@ export default function PayProcess() {
             <div className="flex justify-center">
                 <div className="container mt-5">
                     <div className="w-full flex justify-center">
-                        {payment == 'wallet' ? 
+                        {false ? 
                         (<Image src={wallet} alt=""/>)
                         :
                         (<Image src={promptpay} alt=""/>)}

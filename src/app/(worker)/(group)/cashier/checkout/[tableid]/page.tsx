@@ -68,7 +68,6 @@ export default function Main() {
 
     return (
         <>
-            {}
             <div className='grid gap-4 h-full'>
                 <div className="bg-white w-full rounded p-5 text-2xl">
                     <div className='flex items-center'>
@@ -81,7 +80,7 @@ export default function Main() {
                         <p className="text-3xl">Order Detail</p>
                         <div className="grid grid-cols-2 p-4">
                             <Loading loadding={loader} fallback={<p>Loadding</p>}>
-                                {data?.OrderDetail?.map((e, index) => (<FoodList data={e} key={index}/>))}
+                                {data?.OrderDetail.map((e, index) => (<FoodList data={e} key={index}/>))}
                             </Loading>
                         </div>
                         <div className='rounded border border-black p-4'>

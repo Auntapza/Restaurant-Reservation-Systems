@@ -52,8 +52,6 @@ export default function Mainpage() {
         } 
     ]
 
-    console.log(data);
-
     return (
         <>
             <div className="flex flex-col gap-5">
@@ -145,7 +143,7 @@ function LineChart({label, data}: ChartData) {
                     labels: label,
                     datasets: [
                         {
-                            label: "Order",
+                            label: "Revenu",
                             data,
                             backgroundColor: "rgb(249 115 22)",
                             borderColor: 'rgb(249 115 22)',

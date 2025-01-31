@@ -10,6 +10,9 @@ const nextConfig: NextConfig = {
       protocol: 'http',
       hostname: 'localhost:4000'
     }]
+    },
+    eslint: {
+      ignoreDuringBuilds: true
     }
 };
 

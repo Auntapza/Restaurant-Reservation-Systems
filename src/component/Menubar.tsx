@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { Dispatch, ReactNode, SetStateAction, useEffect, useState } from "react";
 import logo from '../img/Logo.png' // logo image
 import { NavbarMenu } from "@/interface/interface";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTable, faUser } from "@fortawesome/free-solid-svg-icons";
+import LogoutFunction from "@/function/logout"
 
 function Menubar({state, set} : {
     state : boolean,
@@ -38,14 +41,15 @@ function Menubar({state, set} : {
 
     }, [state])
 
-    const MenuLink = ({ children, href, text } : {
+    const MenuLink = ({ children, href, text, disable } : {
         children : ReactNode,
         href: string,
-        text: string
+        text: string,
+        disable?: boolean
     }) => {
 
         return (
-            <Link href={href} className="flex items-center cursor-pointer transition group gap-4 hover:-translate-x-1 hover:scale-105">
+            <Link href={href} className={`flex disabled:text-slate-200 items-center cursor-pointer transition group gap-4 hover:-translate-x-1 hover:scale-105`}>
                 {children}
                 <span className="capitalize font-bold group-hover:text-orange-500 text-2xl transition duration-200">{text}</span>
             </Link>
@@ -65,19 +69,14 @@ function Menubar({state, set} : {
                 image: <Home/>
             },
             {
-                title: 'profile',
-                path: '/app/profile',
-                image: <Home/>
+                title: 'table',
+                path: '/app/table',
+                image: <FontAwesomeIcon icon={faTable} className="text-3xl ms-2"/>
             },
             {
                 title: 'cart',
                 path: '/app/cart',
                 image: <Cart/>
-            },
-            {
-                title: 'Tracking order',
-                path: '/app/trackorder',
-                image: <Home/>
             },
         ]
     }
@@ -105,7 +104,7 @@ function Menubar({state, set} : {
                         <div className="grid px-6 py-8 gap-5">
                             
                             {menu.map((e, index) => (
-                                <MenuLink key={index} href={e.path} text={e.title}>
+                                <MenuLink key={index} disable={e.disable} href={e.path} text={e.title}>
                                     {e.image}
                                 </MenuLink>
                             ))}
@@ -114,8 +113,8 @@ function Menubar({state, set} : {
                     </div>
 
                     {/* Logout Section */}
-                    <button onClick={() => {Logout()}} className="border-t border-black p-8">
-                        <div className="flex items-center cursor-pointer transition group gap-4 hover:-translate-x-1 hover:scale-105 hover:shadow">
+                    <button onClick={() => {LogoutFunction()}} className="border-t border-black p-8">
+                        <div className="flex items-center cursor-pointer transition group gap-4 hover:-translate-x-1 hover:scale-105">
                             <Logout />
                             <span className="font-bold text-[#f00] text-2xl transition duration-200">Logout</span>
                         </div>

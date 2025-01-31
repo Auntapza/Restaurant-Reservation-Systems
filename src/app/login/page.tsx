@@ -9,6 +9,7 @@ import Button from '@/component/Button';
 import { useRouter } from 'next/navigation';
 import Api from '@/function/api';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 function Login() {
 
@@ -61,6 +62,9 @@ function Login() {
           <Textbox placeholder={'Password'} onChange={(e) => {
             setPassword(e.currentTarget.value);
           }} type={'password'}/>
+          <p className='my-3'>Don't have any account? 
+            <Link href={'/register'} className='text-blue-400 underline'>Register</Link>
+          </p>
           <Button type='submit'>Login</Button>
         </form>
 

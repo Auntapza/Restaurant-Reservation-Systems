@@ -40,8 +40,6 @@ function Mainpage() {
         url: 'http://localhost:4000/user/order'
     })
 
-    console.log(data);
-    
     // For category looping
     const CategoryData = [
         {

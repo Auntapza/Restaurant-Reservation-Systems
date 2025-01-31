@@ -8,6 +8,7 @@ import React, { FormEvent } from 'react';
 import logo from '@/img/Logo.png'
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const Signup: React.FC = () => {
 
@@ -101,6 +102,9 @@ const Signup: React.FC = () => {
             name="confirm_password"
             placeholder="Confirm Password"
           />
+          <p className='my-3'>Allready have an account? 
+            <Link href={'/login'} className='text-blue-400 underline'>Login</Link>
+          </p>
           <Button type="submit" className="mt-4">
             Signup
           </Button>

@@ -162,8 +162,6 @@ export function Cash({total, state}: popup) {
     const [amount, setAmount] = useState<number>(0);
     const {tableid} = useParams();
 
-    console.log(tableid);
-
     const calculateChange = (e: ChangeEvent<HTMLInputElement>) => {
 
         const change = Number(e.target.value) - total

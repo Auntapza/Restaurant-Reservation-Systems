@@ -1,6 +1,6 @@
 'use client'
 
-import socket from "@/backend/lib/socket";
+import socket from "@/lib/socket";
 import Block from "@/component/Block";
 import Button from "@/component/Button";
 import api from "@/function/api";
